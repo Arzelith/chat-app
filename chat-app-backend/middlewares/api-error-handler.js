@@ -21,7 +21,7 @@ const apiErrorHandler = (error, req, res, next) => {
   }
 
   if (error.code && error.code === 11000) {
-    defaultError.statusCode = 400;
+    defaultError.statusCode = 409;
     defaultError.message = `${Object.keys(error.keyValue)} debe ser único`;
   }
 
@@ -29,7 +29,7 @@ const apiErrorHandler = (error, req, res, next) => {
     defaultError.statusCode = error.statusCode;
     defaultError.message = error.message;
   }
-  
+
   res.status(defaultError.statusCode).json({ message: defaultError.message });
 };
 
