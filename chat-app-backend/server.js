@@ -3,10 +3,10 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const connect = require('./db/db-connect');
 //ROUTE IMPORTS
+const userRoutes = require('./routes/user-routes');
 //END ROUTE-IMPORTS
 const cookieParser = require('cookie-parser');
-//ERROR HANDLER IMPORT
-//END ERROR HANDLER IMPORT
+const apiErrorHandler = require('./middlewares/api-error-handler');
 const app = express();
 dotenv.config();
 
@@ -32,11 +32,10 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 //ROUTES
-const v1 = '/chat-api/v1';
+const v1 = '/chat-app-api/v1';
+app.use(`${v1}/users`, userRoutes);
 //END ROUTES
-
-//ERROR MIDDLEWARE
-//END ERROR MIDDLEWARE
+app.use(apiErrorHandler);
 
 const port = process.env.PORT || 5000;
 const startServer = async () => {
