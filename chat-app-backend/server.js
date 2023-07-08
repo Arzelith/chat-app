@@ -5,6 +5,7 @@ const connect = require('./db/db-connect');
 //ROUTE IMPORTS
 const userRoutes = require('./routes/user-routes');
 const authRoutes = require('./routes/auth-routes');
+const refreshRoutes = require('./routes/refresh-routes');
 //END ROUTE-IMPORTS
 const cookieParser = require('cookie-parser');
 const apiErrorHandler = require('./middlewares/api-error-handler');
@@ -36,6 +37,7 @@ if (process.env.NODE_ENV !== 'production') {
 const v1 = '/chat-app-api/v1';
 app.use(`${v1}/users`, userRoutes);
 app.use(`${v1}/auth`, authRoutes);
+app.use(`${v1}/refresh`, refreshRoutes);
 //END ROUTES
 app.use(apiErrorHandler);
 
