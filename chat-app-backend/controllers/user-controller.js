@@ -9,9 +9,9 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   const userExists = await User.findOne({ email });
-  // if (userExists) {
-  //   throw new ApiError(409, 'Ya existe un usuario registrado con este email');
-  // }
+  if (userExists) {
+    throw new ApiError(409, 'Ya existe un usuario registrado con este email');
+  }
 
   if (password.length < 6 || password.length > 20) {
     throw new ApiError(400, 'El password debe tener entre 6 y 20 caracteres');
