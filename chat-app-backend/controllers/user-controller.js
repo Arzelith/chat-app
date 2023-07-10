@@ -1,5 +1,6 @@
 const User = require('../models/user-model');
 const { asyncHandler } = require('../utils/async-handler');
+const { upload } = require('../utils/upload-handler');
 const ApiError = require('../errors/api-error');
 
 const registerUser = asyncHandler(async (req, res) => {
@@ -50,6 +51,28 @@ const updateProfileInfo = asyncHandler(async (req, res) => {
   res.status(200).json({ user });
 });
 
+const updateProfileAvatar = asyncHandler(async (req, res) => {
+  const id = req.user._id;
+  const { action } = req.params;
+  const { avatar64 } = req.body;
+  if (!id) {
+    throw new ApiError(400, 'Id de usuario no encontrada');
+  }
+  const user = await User.findById(id);
+  if (action === 'replace') {
+    if (!avatar64) {
+      throw new ApiError(400, 'Archivo de imagen no encontrado');
+    }
+    const result = await upload(avatar64, id);
+    user.avatar = result.secure_url;
+  }
+  if (action === 'remove') {
+    user.avatar = '';
+  }
+  await user.save();
+  res.status(200).json({ user });
+});
+
 const updatePassword = asyncHandler(async (req, res) => {
   const { password, confirmPassword } = req.body;
   if (!password || !confirmPassword) {
@@ -71,4 +94,4 @@ const checkPass = (password, confirmPassword) => {
   }
 };
 
-module.exports = { registerUser, updatePassword, updateProfileInfo };
+module.exports = { registerUser, updatePassword, updateProfileInfo, updateProfileAvatar };
