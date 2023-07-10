@@ -70,6 +70,21 @@ const updateProfileInfo = asyncHandler(async (req, res) => {
   res.status(200).json({ user });
 });
 
+const updateUserStatus = asyncHandler(async (req, res) => {
+  const status = req.query.status;
+  const id = req.user._id;
+  if (!id) {
+    throw new ApiError(400, 'Id de usuario no encontrada');
+  }
+  if (!status) {
+    throw new ApiError(400, 'Estado de usuario no encontrado');
+  }
+  const user = await User.findById(id);
+  user.status = status;
+  await user.save();
+  res.status(200).json({ user });
+});
+
 const updateProfileAvatar = asyncHandler(async (req, res) => {
   const id = req.user._id;
   const { action } = req.params;
@@ -119,4 +134,5 @@ module.exports = {
   updateProfileInfo,
   updateProfileAvatar,
   findUser,
+  updateUserStatus,
 };

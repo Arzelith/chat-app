@@ -32,7 +32,10 @@ const UserSchema = mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['1', '2', '3'],
+      enum: {
+        values: ['1', '2', '3'],
+        message: 'El valor de estado de usuario debe ser 1, 2 o 3',
+      },
       default: '1',
     },
     refreshToken: { type: String },
