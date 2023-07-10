@@ -29,6 +29,25 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 });
 
+const findUser = asyncHandler(async (req, res) => {
+  const search = req.query.search;
+  if (!search) {
+    return res.status(200).json([]);
+  }
+  const users = await User.find({
+    $and: [
+      {
+        $or: [
+          { displayName: { $regex: search, $options: 'i' } },
+          { email: { $regex: search, $options: 'i' } },
+        ],
+      },
+      { _id: { $ne: req.user._id } },
+    ],
+  });
+  res.status(200).json(users);
+});
+
 const updateProfileInfo = asyncHandler(async (req, res) => {
   const id = req.user._id;
   const { displayName, email } = req.body;
@@ -94,4 +113,10 @@ const checkPass = (password, confirmPassword) => {
   }
 };
 
-module.exports = { registerUser, updatePassword, updateProfileInfo, updateProfileAvatar };
+module.exports = {
+  registerUser,
+  updatePassword,
+  updateProfileInfo,
+  updateProfileAvatar,
+  findUser,
+};
