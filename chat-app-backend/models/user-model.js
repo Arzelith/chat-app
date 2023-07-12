@@ -7,6 +7,7 @@ const UserSchema = mongoose.Schema(
     displayName: {
       type: String,
       required: [true, 'Debe ingresar un nombre'],
+      unique: true,
       minlength: [3, 'Nombre demasiado corto: mínimo 3 caracteres'],
       maxlength: [20, 'Nombre demasiado largo. máximo 20 caracteres'],
       trim: true,

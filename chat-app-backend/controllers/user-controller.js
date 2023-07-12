@@ -5,14 +5,17 @@ const ApiError = require('../errors/api-error');
 
 const registerUser = asyncHandler(async (req, res) => {
   const { displayName, email, password, confirmPassword } = req.body;
-
   if (!displayName || !email || !password || !confirmPassword) {
     throw new ApiError(400, 'Todos los campos son requeridos');
   }
-  const userExists = await User.findOne({ email });
-  if (userExists) {
-    throw new ApiError(409, 'Ya existe un usuario registrado con este email');
-  }
+  await checkUnique(
+    { email: email.toLowerCase() },
+    'Ya existe un usuario registrado con este email'
+  );
+  await checkUnique(
+    { displayName: { $regex: displayName, $options: 'i' } },
+    'Este nombre de usuario ya se encuentra en uso'
+  );
   checkPass(password, confirmPassword);
   const createdUser = await User.create({
     displayName,
@@ -59,10 +62,16 @@ const updateProfileInfo = asyncHandler(async (req, res) => {
   }
   const user = await User.findById(id);
   if (user.email !== email.toLowerCase()) {
-    const userExists = await User.findOne({ email: email.toLowerCase() });
-    if (userExists) {
-      throw new ApiError(409, 'El email ingresado ya se encuentra en uso');
-    }
+    await checkUnique(
+      { email: email.toLowerCase() },
+      'Ya existe un usuario registrado con este email'
+    );
+  }
+  if (user.displayName.toLowerCase() !== displayName.toLowerCase()) {
+    await checkUnique(
+      { displayName: { $regex: displayName, $options: 'i' } },
+      'Este nombre de usuario ya se encuentra en uso'
+    );
   }
   user.displayName = displayName;
   user.email = email.toLowerCase();
@@ -119,12 +128,21 @@ const updatePassword = asyncHandler(async (req, res) => {
   res.sendStatus(200);
 });
 
+
+//HELPERS
 const checkPass = (password, confirmPassword) => {
   if (password.length < 6 || password.length > 20) {
     throw new ApiError(400, 'El password debe tener entre 6 y 20 caracteres');
   }
   if (password !== confirmPassword) {
     throw new ApiError(400, 'Los passwords no concuerdan');
+  }
+};
+
+const checkUnique = async (condition, message) => {
+  const user = await User.findOne(condition);
+  if (user) {
+    throw new ApiError(409, message);
   }
 };
 
