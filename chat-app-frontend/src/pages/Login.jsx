@@ -1,7 +1,13 @@
-import { TextInput, PageWrapper, ButtonInput } from '../components';
+import {
+  TextInput,
+  PageWrapper,
+  ButtonInput,
+  AlertDisplay,
+  PaperWrapper,
+} from '../components';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { Paper, Typography, Box } from '@mui/material';
+import { Typography } from '@mui/material';
 import Lottie from 'lottie-react';
 import logo from '../assets/animations/logoA.json';
 
@@ -20,40 +26,66 @@ const Login = () => {
       <Formik
         initialValues={{ ...initialState }}
         validationSchema={validation}
-        onSubmit={(values) => {
-          console.log(values);
+        onSubmit={(values, actions) => {
+          //FAKE SUBMIT
+          setTimeout(() => {
+            console.log(values);
+            actions.setSubmitting(false);
+            actions.resetForm({ ...initialState });
+          }, 3000);
+          setTimeout(() => {
+            actions.setFieldError('general', 'Un error genérico');
+          }, 3001);
         }}
+        //END FAKE SUBMIT
       >
-        <Paper
-          component={Form}
-          variant='outlined'
-          sx={{
-            p: 4,
-            width: '480px',
-            backgroundColor: '#fff',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
-          <Lottie animationData={logo} style={{ height: '80px', marginTop:'-22px' }} loop='false' />
-          <Typography align='center' variant='h5' fontWeight={700} mb={1} color={'primary'}>
-            Bienvenido a MERN Chat App
-          </Typography>
-          <TextInput name='email' label='Email' margin='normal' />
-          <TextInput name='password' label='Password' margin='normal' />
-          <ButtonInput size='large' sx={{ mt: 2 }}>
-            Iniciar sesión
-          </ButtonInput>
-          <ButtonInput
-            size='large'
-            color='success'
-            type='button'
-            sx={{ mt: 1 }}
-            onClick={() => console.log('action')}
-          >
-            Crear nueva cuenta
-          </ButtonInput>
-        </Paper>
+        {({ isSubmitting, errors }) => (
+          <PaperWrapper component={Form}>
+            <Lottie
+              animationData={logo}
+              style={{ height: '80px', marginTop: '-22px' }}
+              loop='false'
+            />
+
+            <Typography
+              align='center'
+              variant='h5'
+              fontWeight={700}
+              mb={1}
+              color={'primary'}
+            >
+              Bienvenido a MERN Chat App
+            </Typography>
+            <AlertDisplay isSubmitting={isSubmitting} error={errors.general} />
+            <TextInput
+              name='email'
+              label='Email'
+              margin='normal'
+              disabled={isSubmitting}
+            />
+            <TextInput
+              name='password'
+              label='Password'
+              type='password'
+              autoComplete='current-password'
+              margin='normal'
+              disabled={isSubmitting}
+            />
+            <ButtonInput size='large' sx={{ mt: 2 }} disabled={isSubmitting}>
+              Iniciar sesión
+            </ButtonInput>
+            <ButtonInput
+              size='large'
+              color='success'
+              type='button'
+              sx={{ mt: 1 }}
+              disabled={isSubmitting}
+              onClick={() => console.log('action')}
+            >
+              Crear nueva cuenta
+            </ButtonInput>
+          </PaperWrapper>
+        )}
       </Formik>
     </PageWrapper>
   );
