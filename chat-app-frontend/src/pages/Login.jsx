@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   TextInput,
   PageWrapper,
@@ -12,20 +13,39 @@ import Lottie from 'lottie-react';
 import logo from '../assets/animations/logoA.json';
 
 const initialState = {
+  displayName: '',
   email: '',
   password: '',
+  confirmPassword: '',
 };
-const validation = Yup.object().shape({
+const loginValidation = Yup.object().shape({
   password: Yup.string().required('password es requerido'),
   email: Yup.string().email('email inválido').required('email es requerido'),
 });
 
+const registerValidation = Yup.object().shape({
+  displayName: Yup.string()
+    .required('nombre de usuario es requerido')
+    .min(3, 'nombre de usuario debe tener entre 3 y 20 caracteres')
+    .max(20, 'nombre de usuario debe tener entre 3 y 20 caracteres'),
+  email: Yup.string().email('email inválido').required('email es requerido'),
+  password: Yup.string()
+    .required('password es requerido')
+    .min(6, 'password debe tener entre 6 y 20 caracteres')
+    .max(20, 'password debe tener entre 6 y 20 caracteres'),
+  confirmPassword: Yup.string().oneOf(
+    [Yup.ref('password'), null],
+    'passwords no concuerdan'
+  ),
+});
+
 const Login = () => {
+  const [isRegistered, setIsRegistered] = useState(true);
   return (
     <PageWrapper>
       <Formik
         initialValues={{ ...initialState }}
-        validationSchema={validation}
+        validationSchema={isRegistered ? loginValidation : registerValidation}
         onSubmit={(values, actions) => {
           //FAKE SUBMIT
           setTimeout(() => {
@@ -39,7 +59,7 @@ const Login = () => {
         }}
         //END FAKE SUBMIT
       >
-        {({ isSubmitting, errors }) => (
+        {({ isSubmitting, errors, resetForm }) => (
           <PaperWrapper component={Form}>
             <Lottie
               animationData={logo}
@@ -54,12 +74,23 @@ const Login = () => {
               mb={1}
               color={'primary'}
             >
-              Bienvenido a MERN Chat App
+              {isRegistered ? 'Bienvenido a MERN Chat App' : 'Registro de nuevo usuario'}
             </Typography>
+
             <AlertDisplay isSubmitting={isSubmitting} error={errors.general} />
+            {!isRegistered && (
+              <TextInput
+                name='displayName'
+                label='Nombre de usuario'
+                autoComplete='off'
+                margin='normal'
+                disabled={isSubmitting}
+              />
+            )}
             <TextInput
               name='email'
               label='Email'
+              autoComplete={isRegistered ? 'username' : 'off'}
               margin='normal'
               disabled={isSubmitting}
             />
@@ -67,22 +98,36 @@ const Login = () => {
               name='password'
               label='Password'
               type='password'
-              autoComplete='current-password'
+              autoComplete={isRegistered ? 'current-password' : 'off'}
               margin='normal'
               disabled={isSubmitting}
             />
+            {!isRegistered && (
+              <TextInput
+                name='confirmPassword'
+                label='Confirmar password'
+                type='password'
+                autoComplete='off'
+                margin='normal'
+                disabled={isSubmitting}
+              />
+            )}
             <ButtonInput size='large' sx={{ mt: 2 }} disabled={isSubmitting}>
-              Iniciar sesión
+              {isRegistered ? 'Iniciar sesión' : 'Registrarse'}
             </ButtonInput>
             <ButtonInput
+              disableRipple
               size='large'
-              color='success'
+              color={isRegistered ? 'success' : 'error'}
               type='button'
               sx={{ mt: 1 }}
               disabled={isSubmitting}
-              onClick={() => console.log('action')}
+              onClick={() => {
+                resetForm({ ...initialState });
+                setIsRegistered(!isRegistered);
+              }}
             >
-              Crear nueva cuenta
+              {isRegistered ? 'Crear nueva cuenta' : 'Cancelar'}
             </ButtonInput>
           </PaperWrapper>
         )}
