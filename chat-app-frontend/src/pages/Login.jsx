@@ -1,5 +1,7 @@
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { axiosPublic } from '../api/axios';
+import { authUser } from '../features/userSlice';
 import handleServerError from '../utils/serverErrorHandler';
 import {
   TextInput,
@@ -23,7 +25,8 @@ const initialState = {
 
 const Login = () => {
   const [isRegistered, setIsRegistered] = useState(true);
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
 
   return (
     <PageWrapper>
@@ -46,13 +49,15 @@ const Login = () => {
               await axiosPublic.post('/users', values);
               setOpen(true);
             } else {
-              console.log(values);
+              await dispatch(authUser(values)).unwrap();
             }
             actions.resetForm({ ...initialState });
           } catch (error) {
             if (!isRegistered) {
               const requestError = handleServerError(error);
               actions.setFieldError('general', requestError.message);
+            } else {
+              actions.setFieldError('general', error.message);
             }
           } finally {
             actions.setSubmitting(false);
@@ -66,7 +71,6 @@ const Login = () => {
               style={{ height: '80px', marginTop: '-22px' }}
               loop='false'
             />
-
             <Typography
               align='center'
               variant='h5'
@@ -76,9 +80,7 @@ const Login = () => {
             >
               {isRegistered ? 'Bienvenido a MERN Chat App' : 'Registro de nuevo usuario'}
             </Typography>
-
             <AlertDisplay isSubmitting={isSubmitting} error={errors.general} />
-
             {!isRegistered && (
               <TextInput
                 name='displayName'
