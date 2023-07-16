@@ -1,7 +1,7 @@
 import TextInput from './TextInput';
 import PageWrapper from './PageWrapper';
-import ButtonInput from './ButtonInput';
 import AlertDisplay from './AlertDisplay';
 import PaperWrapper from './PaperWrapper';
+import ActionModal from './ActionModal';
 
-export { TextInput, PageWrapper, ButtonInput, AlertDisplay, PaperWrapper };
+export { TextInput, PageWrapper, AlertDisplay, PaperWrapper, ActionModal };
