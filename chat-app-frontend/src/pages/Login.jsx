@@ -9,7 +9,7 @@ import {
   ActionModal,
 } from '../components';
 import { Formik, Form } from 'formik';
-import * as Yup from 'yup';
+import { loginValidation, registerValidation } from '../validations/loginPageValidations';
 import { Typography, Button } from '@mui/material';
 import Lottie from 'lottie-react';
 import logo from '../assets/animations/logoA.json';
@@ -20,30 +20,11 @@ const initialState = {
   password: '',
   confirmPassword: '',
 };
-const loginValidation = Yup.object().shape({
-  password: Yup.string().required('password es requerido'),
-  email: Yup.string().email('email inválido').required('email es requerido'),
-});
-
-const registerValidation = Yup.object().shape({
-  displayName: Yup.string()
-    .required('nombre de usuario es requerido')
-    .min(3, 'nombre de usuario debe tener entre 3 y 20 caracteres')
-    .max(20, 'nombre de usuario debe tener entre 3 y 20 caracteres'),
-  email: Yup.string().email('email inválido').required('email es requerido'),
-  password: Yup.string()
-    .required('password es requerido')
-    .min(6, 'password debe tener entre 6 y 20 caracteres')
-    .max(20, 'password debe tener entre 6 y 20 caracteres'),
-  confirmPassword: Yup.string().oneOf(
-    [Yup.ref('password'), null],
-    'passwords no concuerdan'
-  ),
-});
 
 const Login = () => {
   const [isRegistered, setIsRegistered] = useState(true);
   const [open, setOpen] = useState(true);
+
   return (
     <PageWrapper>
       <ActionModal
@@ -97,6 +78,7 @@ const Login = () => {
             </Typography>
 
             <AlertDisplay isSubmitting={isSubmitting} error={errors.general} />
+
             {!isRegistered && (
               <TextInput
                 name='displayName'
