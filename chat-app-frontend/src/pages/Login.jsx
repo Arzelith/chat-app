@@ -1,14 +1,16 @@
 import { useState } from 'react';
+import { axiosPublic } from '../api/axios';
+import handleServerError from '../utils/serverErrorHandler';
 import {
   TextInput,
   PageWrapper,
-  ButtonInput,
   AlertDisplay,
   PaperWrapper,
+  ActionModal,
 } from '../components';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { Typography } from '@mui/material';
+import { Typography, Button } from '@mui/material';
 import Lottie from 'lottie-react';
 import logo from '../assets/animations/logoA.json';
 
@@ -41,23 +43,40 @@ const registerValidation = Yup.object().shape({
 
 const Login = () => {
   const [isRegistered, setIsRegistered] = useState(true);
+  const [open, setOpen] = useState(true);
   return (
     <PageWrapper>
+      <ActionModal
+        variant={'success'}
+        open={open}
+        title={'Registro exitoso'}
+        acceptBtnText={'Aceptar'}
+        onClick={() => {
+          setOpen(false);
+          setIsRegistered(true);
+        }}
+      />
       <Formik
         initialValues={{ ...initialState }}
         validationSchema={isRegistered ? loginValidation : registerValidation}
-        onSubmit={(values, actions) => {
-          //FAKE SUBMIT
-          setTimeout(() => {
-            console.log(values);
-            actions.setSubmitting(false);
+        onSubmit={async (values, actions) => {
+          try {
+            if (!isRegistered) {
+              await axiosPublic.post('/users', values);
+              setOpen(true);
+            } else {
+              console.log(values);
+            }
             actions.resetForm({ ...initialState });
-          }, 3000);
-          setTimeout(() => {
-            actions.setFieldError('general', 'Un error genérico');
-          }, 3001);
+          } catch (error) {
+            if (!isRegistered) {
+              const requestError = handleServerError(error);
+              actions.setFieldError('general', requestError.message);
+            }
+          } finally {
+            actions.setSubmitting(false);
+          }
         }}
-        //END FAKE SUBMIT
       >
         {({ isSubmitting, errors, resetForm }) => (
           <PaperWrapper component={Form}>
@@ -112,23 +131,30 @@ const Login = () => {
                 disabled={isSubmitting}
               />
             )}
-            <ButtonInput size='large' sx={{ mt: 2 }} disabled={isSubmitting}>
+            <Button
+              size='large'
+              sx={{ mt: 2 }}
+              disabled={isSubmitting}
+              type='submit'
+              variant='contained'
+            >
               {isRegistered ? 'Iniciar sesión' : 'Registrarse'}
-            </ButtonInput>
-            <ButtonInput
+            </Button>
+            <Button
               disableRipple
               size='large'
               color={isRegistered ? 'success' : 'error'}
               type='button'
               sx={{ mt: 1 }}
               disabled={isSubmitting}
+              variant='contained'
               onClick={() => {
                 resetForm({ ...initialState });
                 setIsRegistered(!isRegistered);
               }}
             >
               {isRegistered ? 'Crear nueva cuenta' : 'Cancelar'}
-            </ButtonInput>
+            </Button>
           </PaperWrapper>
         )}
       </Formik>
