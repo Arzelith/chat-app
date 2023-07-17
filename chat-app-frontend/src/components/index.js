@@ -1,4 +1,4 @@
-import TextInput from './TextInput';
+import FormInput from './FormInput';
 import PageWrapper from './PageWrapper';
 import AlertDisplay from './AlertDisplay';
 import PaperWrapper from './PaperWrapper';
@@ -6,7 +6,7 @@ import ActionModal from './ActionModal';
 import ProtectedRoute from './ProtectedRoute';
 
 export {
-  TextInput,
+  FormInput,
   PageWrapper,
   AlertDisplay,
   PaperWrapper,

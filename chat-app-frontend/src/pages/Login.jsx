@@ -4,7 +4,7 @@ import { axiosPublic } from '../api/axios';
 import { authUser } from '../features/userSlice';
 import handleServerError from '../utils/serverErrorHandler';
 import {
-  TextInput,
+  FormInput,
   PageWrapper,
   AlertDisplay,
   PaperWrapper,
@@ -82,7 +82,7 @@ const Login = () => {
             </Typography>
             <AlertDisplay isSubmitting={isSubmitting} error={errors.general} />
             {!isRegistered && (
-              <TextInput
+              <FormInput
                 name='displayName'
                 label='Nombre de usuario'
                 autoComplete='off'
@@ -90,14 +90,14 @@ const Login = () => {
                 disabled={isSubmitting}
               />
             )}
-            <TextInput
+            <FormInput
               name='email'
               label='Email'
               autoComplete={isRegistered ? 'username' : 'off'}
               margin='normal'
               disabled={isSubmitting}
             />
-            <TextInput
+            <FormInput
               name='password'
               label='Password'
               type='password'
@@ -106,7 +106,7 @@ const Login = () => {
               disabled={isSubmitting}
             />
             {!isRegistered && (
-              <TextInput
+              <FormInput
                 name='confirmPassword'
                 label='Confirmar password'
                 type='password'

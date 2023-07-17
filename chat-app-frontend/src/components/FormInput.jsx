@@ -1,7 +1,7 @@
 import { TextField } from '@mui/material';
 import { useField } from 'formik';
 
-const TextInput = ({ name, ...otherProps }) => {
+const FormInput = ({ name, ...otherProps }) => {
   const [field, meta] = useField(name);
   const configTextField = {
     ...field,
@@ -17,4 +17,4 @@ const TextInput = ({ name, ...otherProps }) => {
   return <TextField {...configTextField} />;
 };
 
-export default TextInput;
+export default FormInput;
