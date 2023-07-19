@@ -1,8 +1,9 @@
 import { Container } from '@mui/material';
 
-const PageWrapper = ({children}) => {
+const PageWrapper = ({ children }) => {
   return (
     <Container
+      maxWidth={'xxl'}
       sx={{
         height: '100svh',
         display: 'flex',

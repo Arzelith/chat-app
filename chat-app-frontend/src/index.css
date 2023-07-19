@@ -1,1 +1,14 @@
+.MuiInputBase-input {
+  background: #fff;
+}
 
+.MuiTextField-root {
+  background: #fff;
+
+  border-radius: 6px;
+}
+
+.text-box {
+  overflow: auto;
+  height: calc(100% - 133px);
+}
