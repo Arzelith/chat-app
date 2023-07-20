@@ -14,13 +14,18 @@ const style = {
 };
 
 const ActionModal = ({ open, children, variant, onClick, title, acceptBtnText }) => {
-  if (variant === 'success') {
-    return (
-      <Modal open={open}>
-        <Paper sx={style} variant='outlined' className='modal'>
-          <Typography variant='h4' fontWeight={'bold'} color={'primary'} mb={2}>
-            {title}
-          </Typography>
+  return (
+    <Modal open={open}>
+      <Paper sx={style} variant='outlined' className='modal'>
+        <Typography
+          variant='h4'
+          fontWeight={'bold'}
+          color={'primary'}
+          mb={variant === 'form' ? 0 : 2}
+        >
+          {title}
+        </Typography>
+        {variant === 'success' && (
           <Button
             size='md'
             type='button'
@@ -31,10 +36,11 @@ const ActionModal = ({ open, children, variant, onClick, title, acceptBtnText })
           >
             {acceptBtnText}
           </Button>
-        </Paper>
-      </Modal>
-    );
-  }
+        )}
+        {variant === 'form' && children}
+      </Paper>
+    </Modal>
+  );
 };
 
 export default ActionModal;
