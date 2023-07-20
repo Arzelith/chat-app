@@ -13,13 +13,9 @@ import {
   Menu,
   styled,
 } from '@mui/material';
-import {
-  MoreVert,
-  ExpandLess,
-  ExpandMore,
-} from '@mui/icons-material';
+import { MoreVert, ExpandLess, ExpandMore } from '@mui/icons-material';
 
-const ActionBar = ({ variant }) => {
+const ActionBar = ({ variant, setOpenFormModal }) => {
   const [avatarMenu, setAvatarMenu] = useState(null);
   const [vertMenu, setVertMenu] = useState(null);
   const [statusMenu, setStatusMenu] = useState(null);
@@ -44,18 +40,16 @@ const ActionBar = ({ variant }) => {
         {variant === 'left' && (
           <>
             <Box>
-              <Box id='avatar-button'
-                  onClick={(e) => {
-                    setAvatarMenu(e.currentTarget);
-                  }}>
-              <StyledBadge color='success' variant='dot'>
-                <Avatar
-                  sx={{ height: '45px', width: '45px', cursor: 'pointer' }}
-                  
-                />
-              </StyledBadge>
+              <Box
+                id='avatar-button'
+                onClick={(e) => {
+                  setAvatarMenu(e.currentTarget);
+                }}
+              >
+                <StyledBadge color='success' variant='dot'>
+                  <Avatar sx={{ height: '45px', width: '45px', cursor: 'pointer' }} />
+                </StyledBadge>
               </Box>
-              
 
               <Menu
                 id='avatar-menu-button'
@@ -66,7 +60,14 @@ const ActionBar = ({ variant }) => {
                   'aria-labelledby': 'avatar-button',
                 }}
               >
-                <MenuItem onClick={() => setAvatarMenu(null)}>Cambiar avatar</MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    setAvatarMenu(null);
+                    setOpenFormModal('avatar');
+                  }}
+                >
+                  Cambiar avatar
+                </MenuItem>
                 <MenuItem onClick={() => setAvatarMenu(null)}>Eliminar avatar</MenuItem>
               </Menu>
             </Box>
@@ -123,8 +124,22 @@ const ActionBar = ({ variant }) => {
                 'aria-labelledby': 'vert-button',
               }}
             >
-              <MenuItem onClick={() => setVertMenu(null)}>Configurar perfil</MenuItem>
-              <MenuItem onClick={() => setVertMenu(null)}>Cambiar contraseña</MenuItem>
+              <MenuItem
+                onClick={() => {
+                  setVertMenu(null);
+                  setOpenFormModal('perfil');
+                }}
+              >
+                Configurar perfil
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  setVertMenu(null);
+                  setOpenFormModal('password');
+                }}
+              >
+                Cambiar contraseña
+              </MenuItem>
               <MenuItem onClick={() => setVertMenu(null)}>Cerrar sesión</MenuItem>
             </Menu>
           </>

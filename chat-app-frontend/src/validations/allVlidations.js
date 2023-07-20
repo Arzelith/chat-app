@@ -26,10 +26,33 @@ const confirmPasswordValidation = () => {
   return Yup.string().oneOf([Yup.ref('password'), null], 'passwords no concuerdan');
 };
 
+//image validation
+const MAX_FILE_SIZE = 10240000; //100KB
+const validFileExtensions = { image: ['jpg', 'gif', 'png', 'jpeg'] };
+function isValidFileType(fileName, fileType) {
+  return (
+    fileName && validFileExtensions[fileType].indexOf(fileName.split('.').pop()) > -1
+  );
+}
+
+const imageValidation = () => {
+  return Yup.mixed()
+    .required('debe seleccionar un archivo')
+    .test('is-valid-type', 'el formato no es válido: jpg, jpeg, gif, png', (value) =>
+      isValidFileType(value && value.name.toLowerCase(), 'image')
+    )
+    .test(
+      'is-valid-size',
+      'el tamaño máximo permitido son 10MB',
+      (value) => value && value.size <= MAX_FILE_SIZE
+    );
+};
+
 export {
   passwordValidation,
   emailValidation,
   displayNameValidation,
   newPasswordValidation,
   confirmPasswordValidation,
+  imageValidation,
 };
