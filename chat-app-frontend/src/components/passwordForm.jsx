@@ -1,4 +1,4 @@
-import { FormInput } from './';
+import { FormInput } from '.';
 
 const PasswordForm = ({ isSubmitting }) => {
   return (
