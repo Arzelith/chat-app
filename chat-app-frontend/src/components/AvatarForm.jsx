@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { FormInput } from './';
 import { Avatar, FormHelperText } from '@mui/material';
 import { ErrorMessage } from 'formik';
-import { convertToBase64 } from '../utils/imageToBase64Handler';
 
 const AvatarForm = ({ isSubmitting, user, setFieldValue }) => {
   const [preview, setPreview] = useState(user.avatar);
@@ -14,6 +13,19 @@ const AvatarForm = ({ isSubmitting, user, setFieldValue }) => {
     setPreview(base64);
     setfieldValue('avatar64', base64);
     return base64;
+  };
+
+  const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
   };
 
   return (

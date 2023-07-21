@@ -8,9 +8,8 @@ import ActionBar from './ActionBar';
 import Welcome from './Welcome';
 import ActiveChat from './ActiveChat';
 import ModalForm from './ModalForm';
-import ProfileForm from './ProfileForm';
-import PasswordForm from './PasswordForm';
 import AvatarForm from './AvatarForm';
+import FormBtnCombo from './FormBtnCombo';
 
 export {
   FormInput,
@@ -23,7 +22,6 @@ export {
   Welcome,
   ActiveChat,
   ModalForm,
-  ProfileForm,
-  PasswordForm,
-  AvatarForm
+  AvatarForm,
+  FormBtnCombo
 };

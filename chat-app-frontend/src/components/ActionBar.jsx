@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import {
   AppBar,
@@ -16,12 +16,34 @@ import {
 import { MoreVert, ExpandLess, ExpandMore } from '@mui/icons-material';
 
 const ActionBar = ({ variant, setOpenFormModal }) => {
-  const [avatarMenu, setAvatarMenu] = useState(null);
-  const [vertMenu, setVertMenu] = useState(null);
-  const [statusMenu, setStatusMenu] = useState(null);
-  const openVertMenu = Boolean(vertMenu);
-  const openAvatarMenu = Boolean(avatarMenu);
-  const openStatusMenu = Boolean(statusMenu);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [open, setOpen] = useState('');
+
+  const handleOpenMenu = (e, menu) => {
+    setAnchorEl(e.currentTarget);
+    setOpen(menu);
+  };
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+    setOpen('');
+  };
+
+  const avatarMenuItems = [
+    { text: 'Cambiar avatar', action: () => setOpenFormModal('avatar') },
+    { text: 'Eliminar avatar', action: () => console.log('Eliminar avatar') },
+  ];
+
+  const statusMenuItems = [
+    { text: 'Dsiponible', action: () => console.log('disponible') },
+    { text: 'No disponible', action: () => console.log('No disponible') },
+    { text: 'Ocupado', action: () => console.log('Ocupado') },
+  ];
+
+  const verticalMenuItems = [
+    { text: 'Configurar perfil', action: () => setOpenFormModal('perfil') },
+    { text: 'Cambiar contraseña', action: () => setOpenFormModal('password') },
+    { text: 'Cerrar sesión', action: () => console.log('logout') },
+  ];
 
   const StyledBadge = styled(Badge)(({ theme }) => ({
     '& .MuiBadge-badge': {
@@ -43,7 +65,7 @@ const ActionBar = ({ variant, setOpenFormModal }) => {
               <Box
                 id='avatar-button'
                 onClick={(e) => {
-                  setAvatarMenu(e.currentTarget);
+                  handleOpenMenu(e, 'avatar');
                 }}
               >
                 <StyledBadge color='success' variant='dot'>
@@ -52,23 +74,21 @@ const ActionBar = ({ variant, setOpenFormModal }) => {
               </Box>
 
               <Menu
-                id='avatar-menu-button'
-                anchorEl={avatarMenu}
-                open={openAvatarMenu}
-                onClose={() => setAvatarMenu(null)}
-                MenuListProps={{
-                  'aria-labelledby': 'avatar-button',
-                }}
+                anchorEl={anchorEl}
+                open={open === 'avatar'}
+                onClose={handleCloseMenu}
               >
-                <MenuItem
-                  onClick={() => {
-                    setAvatarMenu(null);
-                    setOpenFormModal('avatar');
-                  }}
-                >
-                  Cambiar avatar
-                </MenuItem>
-                <MenuItem onClick={() => setAvatarMenu(null)}>Eliminar avatar</MenuItem>
+                {avatarMenuItems.map((menuItem) => (
+                  <MenuItem
+                    key={menuItem.text}
+                    onClick={() => {
+                      handleCloseMenu();
+                      menuItem.action();
+                    }}
+                  >
+                    {menuItem.text}
+                  </MenuItem>
+                ))}
               </Menu>
             </Box>
 
@@ -77,70 +97,58 @@ const ActionBar = ({ variant, setOpenFormModal }) => {
               flexGrow={1}
               sx={{ cursor: 'pointer' }}
               onClick={(e) => {
-                setStatusMenu(e.currentTarget);
+                handleOpenMenu(e, 'status');
               }}
-              id='status-button'
             >
               <Typography ml={1} fontSize={15}>
                 Disponible
               </Typography>
 
-              {statusMenu ? (
+              {open === 'status' ? (
                 <ExpandLess sx={{ height: '22px' }} />
               ) : (
                 <ExpandMore sx={{ height: '22px' }} />
               )}
             </Box>
-            <Menu
-              id='status-menu-button'
-              anchorEl={statusMenu}
-              open={openStatusMenu}
-              onClose={() => setStatusMenu(null)}
-              MenuListProps={{
-                'aria-labelledby': 'status-button',
-              }}
-            >
-              <MenuItem onClick={() => setStatusMenu(null)}>Disponible</MenuItem>
-              <MenuItem onClick={() => setStatusMenu(null)}>No disponible</MenuItem>
-              <MenuItem onClick={() => setStatusMenu(null)}>Ocupado</MenuItem>
+            <Menu anchorEl={anchorEl} open={open === 'status'} onClose={handleCloseMenu}>
+              {statusMenuItems.map((menuItem) => (
+                <MenuItem
+                  key={menuItem.text}
+                  onClick={() => {
+                    menuItem.action();
+                    handleCloseMenu();
+                  }}
+                >
+                  {menuItem.text}
+                </MenuItem>
+              ))}
             </Menu>
 
             <IconButton
               size='large'
               color='inherit'
-              id='vert-button'
               onClick={(e) => {
-                setVertMenu(e.currentTarget);
+                handleOpenMenu(e, 'vertical');
               }}
             >
               <MoreVert />
             </IconButton>
             <Menu
-              id='vert-menu'
-              anchorEl={vertMenu}
-              open={openVertMenu}
-              onClose={() => setVertMenu(null)}
-              MenuListProps={{
-                'aria-labelledby': 'vert-button',
-              }}
+              anchorEl={anchorEl}
+              open={open === 'vertical'}
+              onClose={handleCloseMenu}
             >
-              <MenuItem
-                onClick={() => {
-                  setVertMenu(null);
-                  setOpenFormModal('perfil');
-                }}
-              >
-                Configurar perfil
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  setVertMenu(null);
-                  setOpenFormModal('password');
-                }}
-              >
-                Cambiar contraseña
-              </MenuItem>
-              <MenuItem onClick={() => setVertMenu(null)}>Cerrar sesión</MenuItem>
+              {verticalMenuItems.map((menuItem) => (
+                <MenuItem
+                  key={menuItem.text}
+                  onClick={() => {
+                    handleCloseMenu();
+                    menuItem.action();
+                  }}
+                >
+                  {menuItem.text}
+                </MenuItem>
+              ))}
             </Menu>
           </>
         )}

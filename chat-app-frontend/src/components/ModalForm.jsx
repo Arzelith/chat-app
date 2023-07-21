@@ -1,11 +1,23 @@
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { ActionModal, AlertDisplay, ProfileForm, PasswordForm, AvatarForm } from '.';
+import { ActionModal, AlertDisplay, AvatarForm, FormInput, FormBtnCombo } from '.';
 import { profileValidation } from '../validations/profileFormValidations';
 import { passwordValidation } from '../validations/passwordFormValidations';
 import { avatarValidation } from '../validations/avatarFormValidation';
 import { Formik, Form } from 'formik';
-import { Button, Box } from '@mui/material';
+import { Box } from '@mui/material';
+
+const inputs = [
+  { name: 'displayName', label: 'Nombre de usuario', formType: 'perfil' },
+  { name: 'email', label: 'Email', formType: 'perfil' },
+  { name: 'password', label: 'Password', type: 'password', formType: 'password' },
+  {
+    name: 'confirmPassword',
+    label: 'Confirmar password',
+    type: 'password',
+    formType: 'password',
+  },
+];
 
 const ModalForm = ({ setOpenFormModal, openFormModal }) => {
   const { user } = useSelector((storage) => storage.user);
@@ -72,8 +84,19 @@ const ModalForm = ({ setOpenFormModal, openFormModal }) => {
             flexDirection={'column'}
           >
             <AlertDisplay isSubmitting={isSubmitting} error={errors.general} />
-            {openFormModal === 'perfil' && <ProfileForm isSubmitting={isSubmitting} />}
-            {openFormModal === 'password' && <PasswordForm isSubmitting={isSubmitting} />}
+            {inputs
+              .filter((input) => input.formType === openFormModal)
+              .map((input) => (
+                <FormInput
+                  key={input.name}
+                  name={input.name}
+                  label={input.label}
+                  autoComplete='off'
+                  margin='normal'
+                  disabled={isSubmitting}
+                />
+              ))}
+
             {openFormModal === 'avatar' && (
               <AvatarForm
                 isSubmitting={isSubmitting}
@@ -81,29 +104,15 @@ const ModalForm = ({ setOpenFormModal, openFormModal }) => {
                 setFieldValue={setFieldValue}
               />
             )}
-
-            <Button
-              size='large'
-              sx={{ mt: 2 }}
-              disabled={isSubmitting}
-              type='submit'
-              variant='contained'
-            >
-              Enviar
-            </Button>
-            <Button
-              size='large'
-              color='error'
-              type='button'
-              sx={{ mt: 1 }}
-              disabled={isSubmitting}
-              variant='contained'
-              onClick={() => {
+            <FormBtnCombo
+              isSubmitting={isSubmitting}
+              submitBtnText={'Enviar'}
+              cancelBtnText={'Cancelar'}
+              cancelBtnColor={'error'}
+              cancelAction={() => {
                 setOpenFormModal('');
               }}
-            >
-              Cancelar
-            </Button>
+            />
           </Box>
         )}
       </Formik>

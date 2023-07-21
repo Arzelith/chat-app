@@ -9,6 +9,7 @@ import {
   AlertDisplay,
   PaperWrapper,
   ActionModal,
+  FormBtnCombo,
 } from '../components';
 import { Formik, Form } from 'formik';
 import { loginValidation, registerValidation } from '../validations/loginPageValidations';
@@ -27,6 +28,35 @@ const Login = () => {
   const [isRegistered, setIsRegistered] = useState(true);
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
+
+  const inputs = [
+    {
+      name: 'displayName',
+      label: 'Nombre de usuario',
+      autoComplete: 'off',
+      show: !isRegistered,
+    },
+    {
+      name: 'email',
+      label: 'Email',
+      autoComplete: isRegistered ? 'username' : 'off',
+      show: isRegistered,
+    },
+    {
+      name: 'password',
+      label: 'Password',
+      type: 'password',
+      autoComplete: isRegistered ? 'current-password' : 'off',
+      show: isRegistered,
+    },
+    {
+      name: 'confirmPassword',
+      label: 'Confirmar password',
+      type: 'password',
+      autoComplete: 'off',
+      show: !isRegistered,
+    },
+  ];
 
   return (
     <PageWrapper>
@@ -81,64 +111,33 @@ const Login = () => {
               {isRegistered ? 'Bienvenido a MERN Chat App' : 'Registro de nuevo usuario'}
             </Typography>
             <AlertDisplay isSubmitting={isSubmitting} error={errors.general} />
-            {!isRegistered && (
-              <FormInput
-                name='displayName'
-                label='Nombre de usuario'
-                autoComplete='off'
-                margin='normal'
-                disabled={isSubmitting}
-              />
-            )}
-            <FormInput
-              name='email'
-              label='Email'
-              autoComplete={isRegistered ? 'username' : 'off'}
-              margin='normal'
-              disabled={isSubmitting}
-            />
-            <FormInput
-              name='password'
-              label='Password'
-              type='password'
-              autoComplete={isRegistered ? 'current-password' : 'off'}
-              margin='normal'
-              disabled={isSubmitting}
-            />
-            {!isRegistered && (
-              <FormInput
-                name='confirmPassword'
-                label='Confirmar password'
-                type='password'
-                autoComplete='off'
-                margin='normal'
-                disabled={isSubmitting}
-              />
-            )}
-            <Button
-              size='large'
-              sx={{ mt: 2 }}
-              disabled={isSubmitting}
-              type='submit'
-              variant='contained'
-            >
-              {isRegistered ? 'Iniciar sesión' : 'Registrarse'}
-            </Button>
-            <Button
-              disableRipple
-              size='large'
-              color={isRegistered ? 'success' : 'error'}
-              type='button'
-              sx={{ mt: 1 }}
-              disabled={isSubmitting}
-              variant='contained'
-              onClick={() => {
+            {inputs
+              .filter((input) =>
+                !isRegistered
+                  ? input.show === !isRegistered || input.show === isRegistered
+                  : input.show === isRegistered
+              )
+              .map((input) => (
+                <FormInput
+                  key={input.name}
+                  name={input.name}
+                  label={input.label}
+                  type={input.type ? input.type : 'text'}
+                  margin='normal'
+                  autoComplete={input.autoComplete}
+                />
+              ))}
+            <FormBtnCombo
+              isSubmitting={isSubmitting}
+              submitBtnText={isRegistered ? 'Iniciar sesión' : 'Registrarse'}
+              cancelBtnText={isRegistered ? 'Crear nueva cuenta' : 'Cancelar'}
+              cancelBtnColor={isRegistered ? 'success' : 'error'}
+              cancelAction={() => {
                 resetForm({ ...initialState });
                 setIsRegistered(!isRegistered);
               }}
-            >
-              {isRegistered ? 'Crear nueva cuenta' : 'Cancelar'}
-            </Button>
+              disableRipple
+            />
           </PaperWrapper>
         )}
       </Formik>
