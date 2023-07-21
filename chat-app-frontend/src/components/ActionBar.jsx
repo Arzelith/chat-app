@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-
+import { useDispatch } from 'react-redux';
+import { logoutUser } from '../features/userSlice';
 import {
   AppBar,
   Toolbar,
@@ -18,6 +19,7 @@ import { MoreVert, ExpandLess, ExpandMore } from '@mui/icons-material';
 const ActionBar = ({ variant, setOpenFormModal }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [open, setOpen] = useState('');
+  const dispatch = useDispatch();
 
   const handleOpenMenu = (e, menu) => {
     setAnchorEl(e.currentTarget);
@@ -42,7 +44,7 @@ const ActionBar = ({ variant, setOpenFormModal }) => {
   const verticalMenuItems = [
     { text: 'Configurar perfil', action: () => setOpenFormModal('perfil') },
     { text: 'Cambiar contraseña', action: () => setOpenFormModal('password') },
-    { text: 'Cerrar sesión', action: () => console.log('logout') },
+    { text: 'Cerrar sesión', action: () => dispatch(logoutUser()) },
   ];
 
   const StyledBadge = styled(Badge)(({ theme }) => ({

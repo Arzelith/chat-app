@@ -12,6 +12,17 @@ export const authUser = createAsyncThunk('user/authUser', async (values, thunkAP
   }
 });
 
+export const logoutUser = createAsyncThunk(
+  'user/logoutUser',
+  async (values, thunkAPI) => {
+    try {
+      await axiosPublic.get('/logout');
+    } catch (error) {
+      return handleServerError(error, thunkAPI);
+    }
+  }
+);
+
 const user = localStorage.getItem('MERN_CHAT_APP_USR');
 const accessToken = localStorage.getItem('MERN_CHAT_APP_ACC');
 
@@ -32,6 +43,12 @@ const userSlice = createSlice({
     builder.addCase(authUser.fulfilled, (state, action) => {
       const { user, accessToken } = action.payload;
       setAccessAndUserData(state, accessToken, user, localStorage);
+    });
+    builder.addCase(logoutUser.fulfilled, (state) => {
+      clearAccessAndUserData(state, localStorage);
+    });
+    builder.addCase(logoutUser.rejected, (state) => {
+      clearAccessAndUserData(state, localStorage);
     });
   },
 });
