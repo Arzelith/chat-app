@@ -6,6 +6,7 @@ import {
   ActiveChat,
   ActionModal,
   ModalForm,
+  UserFinder,
 } from '../components';
 import { Paper, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -18,15 +19,14 @@ const PaperItem = styled(Paper)(({ theme }) => ({
 const Chat = () => {
   const [chatId, setChatId] = useState('1'); //test state
   const [openFormModal, setOpenFormModal] = useState('');
+  const [openUserFinderModal, setOpenUserFinderModal] = useState(false);
   return (
     <PageWrapper>
-      <ActionModal
-        title={`Actualiza tu ${openFormModal}`}
-        open={openFormModal.length > 0}
-        variant={'form'}
-      >
-        <ModalForm setOpenFormModal={setOpenFormModal} openFormModal={openFormModal} />
-      </ActionModal>
+      <ModalForm setOpenFormModal={setOpenFormModal} openFormModal={openFormModal} />
+      <UserFinder
+        openUserFinderModal={openUserFinderModal}
+        setOpenUserFinderModal={setOpenUserFinderModal}
+      />
       <Box display={'flex'} flexDirection={'row'} width={'100%'}>
         <Box
           mr={{ xs: 0, md: 2 }}
@@ -34,7 +34,11 @@ const Chat = () => {
           display={{ xs: chatId ? 'none' : 'block', md: 'block' }}
         >
           <PaperItem variant='outlined'>
-            <ActionBar variant={'left'} setOpenFormModal={setOpenFormModal} />
+            <ActionBar
+              variant={'left'}
+              setOpenFormModal={setOpenFormModal}
+              setOpenUserFinderModal={setOpenUserFinderModal}
+            />
           </PaperItem>
         </Box>
         <Box flexGrow={1} display={{ xs: chatId ? 'block' : 'none', md: 'block' }}>

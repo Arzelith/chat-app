@@ -14,9 +14,9 @@ import {
   Menu,
   styled,
 } from '@mui/material';
-import { MoreVert, ExpandLess, ExpandMore } from '@mui/icons-material';
+import { MoreVert, ExpandLess, ExpandMore, AddComment } from '@mui/icons-material';
 
-const ActionBar = ({ variant, setOpenFormModal }) => {
+const ActionBar = ({ variant, setOpenFormModal, setOpenUserFinderModal }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [open, setOpen] = useState('');
   const dispatch = useDispatch();
@@ -125,6 +125,14 @@ const ActionBar = ({ variant, setOpenFormModal }) => {
                 </MenuItem>
               ))}
             </Menu>
+
+            <IconButton
+              color='inherit'
+              size='large'
+              onClick={() => setOpenUserFinderModal(true)}
+            >
+              <AddComment />
+            </IconButton>
 
             <IconButton
               size='large'

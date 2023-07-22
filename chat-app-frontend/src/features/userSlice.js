@@ -23,12 +23,25 @@ export const logoutUser = createAsyncThunk(
   }
 );
 
+export const findUser = createAsyncThunk(
+  'user/findUser',
+  async ({ axiosPrivate, values }, thunkAPI) => {
+    try {
+      const { data } = await axiosPrivate.get(`/users/?search=${values}`);
+      return data;
+    } catch (error) {
+      return handleServerError(error, thunkAPI);
+    }
+  }
+);
+
 const user = localStorage.getItem('MERN_CHAT_APP_USR');
 const accessToken = localStorage.getItem('MERN_CHAT_APP_ACC');
 
 const initialState = {
   user: user ? JSON.parse(user) : null,
   accessToken: accessToken ? accessToken : null,
+  userList: [],
 };
 
 const userSlice = createSlice({
@@ -36,7 +49,7 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     setAccessToken: (state, action) => {
-      //PENDIENTE
+      state.accessToken = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -50,7 +63,11 @@ const userSlice = createSlice({
     builder.addCase(logoutUser.rejected, (state) => {
       clearAccessAndUserData(state, localStorage);
     });
+    builder.addCase(findUser.fulfilled, (state, action) => {
+      state.userList = [...action.payload];
+    });
   },
 });
 
+export const { setAccessToken } = userSlice.actions;
 export default userSlice.reducer;

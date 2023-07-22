@@ -36,9 +36,15 @@ const ModalForm = ({ setOpenFormModal, openFormModal }) => {
   };
 
   return (
-    <>
+    <ActionModal
+      title={`Actualiza tu ${openFormModal}`}
+      open={openFormModal.length > 0}
+      variant={'form'}
+    >
       <ActionModal
-        title={`${openFormModal[0].toUpperCase() + openFormModal.slice(1)} actualizado`}
+        title={`${
+          openFormModal ? openFormModal[0].toUpperCase() + openFormModal.slice(1) : ''
+        } actualizado`}
         variant={'success'}
         open={openSuccessModal}
         acceptBtnText={'Aceptar'}
@@ -116,7 +122,7 @@ const ModalForm = ({ setOpenFormModal, openFormModal }) => {
           </Box>
         )}
       </Formik>
-    </>
+    </ActionModal>
   );
 };
 

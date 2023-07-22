@@ -37,7 +37,7 @@ const ActionModal = ({ open, children, variant, onClick, title, acceptBtnText })
             {acceptBtnText}
           </Button>
         )}
-        {variant === 'form' && children}
+        {(variant === 'form' || variant === 'finder') && children}
       </Paper>
     </Modal>
   );
