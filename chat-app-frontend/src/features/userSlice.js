@@ -31,11 +31,9 @@ export const findUser = createAsyncThunk(
   async ({ axiosPrivate, values }, thunkAPI) => {
     try {
       const { data } = await axiosPrivate.get(`/users/?search=${values}`);
-      thunkAPI.dispatch(clearServerError());
       return data;
     } catch (error) {
-      const serverError = handleServerError(error, thunkAPI);
-      thunkAPI.dispatch(setServerError(serverError));
+      return handleServerError(error, thunkAPI);
     }
   }
 );

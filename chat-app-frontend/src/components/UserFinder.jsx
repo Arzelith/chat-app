@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { findUser } from '../features/userSlice';
+import { setServerError } from '../features/serverErrorSlice';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import debounce from '../utils/debounce';
 import { ActionModal } from './';
@@ -28,9 +29,17 @@ const UserFinder = ({ openUserFinderModal, setOpenUserFinderModal }) => {
   };
   const debounceChange = useMemo(() => debounce(handleChange, 500));
 
+  const getUsers = async () => {
+    try {
+      await dispatch(findUser({ axiosPrivate, values: userFinder })).unwrap();
+    } catch (error) {
+      dispatch(setServerError(error));
+    }
+  };
+
   useEffect(() => {
     if (userFinder.length > 2) {
-      dispatch(findUser({ axiosPrivate, values: userFinder }));
+      getUsers();
     }
   }, [userFinder]);
 

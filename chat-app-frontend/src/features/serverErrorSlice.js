@@ -1,9 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const serverError = sessionStorage.getItem('MERN_CHAT_APP_SERVER_ERROR');
-
 const initialState = {
-  serverError: serverError ? JSON.parse(serverError) : null,
+  serverError: null,
 };
 
 const serverErrorSlice = createSlice({
@@ -11,15 +9,13 @@ const serverErrorSlice = createSlice({
   initialState,
   reducers: {
     setServerError: (state, action) => {
-      const serverError = action?.payload?.payload;
+      const serverError = action.payload;
       if (serverError.status !== 401 && serverError.status !== 403) {
         state.serverError = serverError;
-        sessionStorage.setItem('MERN_CHAT_APP_SERVER_ERROR', JSON.stringify(serverError));
       }
     },
     clearServerError: (state) => {
       state.serverError = null;
-      sessionStorage.removeItem('MERN_CHAT_APP_SERVER_ERROR');
     },
   },
 });
