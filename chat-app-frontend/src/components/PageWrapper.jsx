@@ -1,6 +1,7 @@
 import { Container } from '@mui/material';
+import { DisplayError } from './';
 
-const PageWrapper = ({ children }) => {
+const PageWrapper = ({ children, serverError }) => {
   return (
     <Container
       maxWidth={'xxl'}
@@ -11,7 +12,14 @@ const PageWrapper = ({ children }) => {
         alignItems: 'center',
       }}
     >
-      {children}
+      {!serverError ? (
+        children
+      ) : (
+        <DisplayError
+          message={serverError.message}
+          status={serverError.status}
+        />
+      )}
     </Container>
   );
 };

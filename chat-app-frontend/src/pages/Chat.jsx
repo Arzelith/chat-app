@@ -1,10 +1,10 @@
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import {
   PageWrapper,
   ActionBar,
   Welcome,
   ActiveChat,
-  ActionModal,
   ModalForm,
   UserFinder,
 } from '../components';
@@ -18,10 +18,12 @@ const PaperItem = styled(Paper)(({ theme }) => ({
 
 const Chat = () => {
   const [chatId, setChatId] = useState('1'); //test state
+  const { serverError } = useSelector((storage) => storage.error);
   const [openFormModal, setOpenFormModal] = useState('');
   const [openUserFinderModal, setOpenUserFinderModal] = useState(false);
+
   return (
-    <PageWrapper>
+    <PageWrapper serverError={serverError}>
       <ModalForm setOpenFormModal={setOpenFormModal} openFormModal={openFormModal} />
       <UserFinder
         openUserFinderModal={openUserFinderModal}

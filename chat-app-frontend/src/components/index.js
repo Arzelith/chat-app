@@ -11,6 +11,7 @@ import ModalForm from './ModalForm';
 import AvatarForm from './AvatarForm';
 import FormBtnCombo from './FormBtnCombo';
 import UserFinder from './UserFinder';
+import DisplayError from './DisplayError';
 
 export {
   FormInput,
@@ -25,5 +26,6 @@ export {
   ModalForm,
   AvatarForm,
   FormBtnCombo,
-  UserFinder
+  UserFinder,
+  DisplayError,
 };

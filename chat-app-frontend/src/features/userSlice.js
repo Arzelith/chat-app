@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosPublic } from '../api/axios';
 import handleServerError from '../utils/serverErrorHandler';
+import { clearServerError, setServerError } from './serverErrorSlice';
 import { setAccessAndUserData, clearAccessAndUserData } from '../utils/accessDataHandler';
 
 export const authUser = createAsyncThunk('user/authUser', async (values, thunkAPI) => {
@@ -17,7 +18,9 @@ export const logoutUser = createAsyncThunk(
   async (values, thunkAPI) => {
     try {
       await axiosPublic.get('/logout');
+      thunkAPI.dispatch(clearServerError());
     } catch (error) {
+      thunkAPI.dispatch(clearServerError());
       return handleServerError(error, thunkAPI);
     }
   }
@@ -28,9 +31,11 @@ export const findUser = createAsyncThunk(
   async ({ axiosPrivate, values }, thunkAPI) => {
     try {
       const { data } = await axiosPrivate.get(`/users/?search=${values}`);
+      thunkAPI.dispatch(clearServerError());
       return data;
     } catch (error) {
-      return handleServerError(error, thunkAPI);
+      const serverError = handleServerError(error, thunkAPI);
+      thunkAPI.dispatch(setServerError(serverError));
     }
   }
 );
@@ -64,7 +69,9 @@ const userSlice = createSlice({
       clearAccessAndUserData(state, localStorage);
     });
     builder.addCase(findUser.fulfilled, (state, action) => {
-      state.userList = [...action.payload];
+      if (action.payload) {
+        state.userList = [...action.payload];
+      }
     });
   },
 });
