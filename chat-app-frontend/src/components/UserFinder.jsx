@@ -29,7 +29,9 @@ const UserFinder = ({ openUserFinderModal, setOpenUserFinderModal }) => {
   const debounceChange = useMemo(() => debounce(handleChange, 500));
 
   useEffect(() => {
-    dispatch(findUser({ axiosPrivate, values: userFinder }));
+    if (userFinder.length > 2) {
+      dispatch(findUser({ axiosPrivate, values: userFinder }));
+    }
   }, [userFinder]);
 
   return (
