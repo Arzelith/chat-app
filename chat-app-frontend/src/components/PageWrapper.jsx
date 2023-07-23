@@ -16,7 +16,7 @@ const PageWrapper = ({ children, serverError }) => {
         children
       ) : (
         <DisplayError
-          message={serverError.message}
+          message={serverError.statusText}
           status={serverError.status}
         />
       )}
