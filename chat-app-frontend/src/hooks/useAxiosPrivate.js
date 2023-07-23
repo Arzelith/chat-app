@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { axiosPrivate } from '../api/axios';
-import { logoutUser } from '../features/userSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import useRefreshToken from './useRefreshToken';
+import { setSessionOver } from '../features/serverErrorSlice';
 
 const useAxiosPrivate = () => {
   const { accessToken } = useSelector((storage) => storage.user);
@@ -31,8 +31,7 @@ const useAxiosPrivate = () => {
             return axiosPrivate(prevRequest);
           }
           if (error?.response?.status === 401) {
-            //PENDIENTE LOGOUT-MODAL
-            dispatch(logoutUser());
+            dispatch(setSessionOver(true));
           }
         }
         return Promise.reject(error);

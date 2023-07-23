@@ -1,7 +1,11 @@
 import { Container } from '@mui/material';
-import { DisplayError } from './';
+import { DisplayError, ActionModal } from './';
+import { useSelector, useDispatch } from 'react-redux';
+import { logoutUser } from '../features/userSlice';
 
 const PageWrapper = ({ children, serverError }) => {
+  const { sessionOver } = useSelector((storage) => storage.error);
+  const dispatch = useDispatch();
   return (
     <Container
       maxWidth={'xxl'}
@@ -13,12 +17,18 @@ const PageWrapper = ({ children, serverError }) => {
       }}
     >
       {!serverError ? (
-        children
+        <>
+          <ActionModal
+            open={sessionOver}
+            title={'Su sesión ha caducado'}
+            variant={'sessionOver'}
+            onClick={() => dispatch(logoutUser())}
+            acceptBtnText={'Volver a login'}
+          />
+          {children}
+        </>
       ) : (
-        <DisplayError
-          message={serverError.statusText}
-          status={serverError.status}
-        />
+        <DisplayError message={serverError.statusText} status={serverError.status} />
       )}
     </Container>
   );

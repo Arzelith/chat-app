@@ -25,12 +25,12 @@ const ActionModal = ({ open, children, variant, onClick, title, acceptBtnText })
         >
           {title}
         </Typography>
-        {variant === 'success' && (
+        {(variant === 'success' || variant === 'sessionOver') && (
           <Button
             size='md'
             type='button'
             variant='contained'
-            color={'success'}
+            color={variant === 'success' ? 'success' : 'primary'}
             sx={{ width: 'fit-content' }}
             onClick={onClick}
           >

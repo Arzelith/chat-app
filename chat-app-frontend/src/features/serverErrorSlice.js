@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   serverError: null,
+  sessionOver: false,
 };
 
 const serverErrorSlice = createSlice({
@@ -14,11 +15,14 @@ const serverErrorSlice = createSlice({
         state.serverError = serverError;
       }
     },
+    setSessionOver: (state, action) => {
+      state.sessionOver = action.payload;
+    },
     clearServerError: (state) => {
       state.serverError = null;
     },
   },
 });
 
-export const { setServerError, clearServerError } = serverErrorSlice.actions;
+export const { setServerError, clearServerError, setSessionOver } = serverErrorSlice.actions;
 export default serverErrorSlice.reducer;

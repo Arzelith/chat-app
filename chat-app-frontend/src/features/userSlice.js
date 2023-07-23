@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosPublic } from '../api/axios';
 import handleServerError from '../utils/serverErrorHandler';
-import { clearServerError, setServerError } from './serverErrorSlice';
+import { clearServerError, setSessionOver } from './serverErrorSlice';
 import { setAccessAndUserData, clearAccessAndUserData } from '../utils/accessDataHandler';
 
 export const authUser = createAsyncThunk('user/authUser', async (values, thunkAPI) => {
@@ -19,8 +19,10 @@ export const logoutUser = createAsyncThunk(
     try {
       await axiosPublic.get('/logout');
       thunkAPI.dispatch(clearServerError());
+      thunkAPI.dispatch(setSessionOver(false))
     } catch (error) {
       thunkAPI.dispatch(clearServerError());
+      thunkAPI.dispatch(setSessionOver(false))
       return handleServerError(error, thunkAPI);
     }
   }
