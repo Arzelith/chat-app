@@ -38,7 +38,7 @@ const UserFinder = ({ openUserFinderModal, setOpenUserFinderModal }) => {
   };
 
   useEffect(() => {
-    if (userFinder.length > 2) {
+    if (userFinder.length > 0) {
       getUsers();
     }
   }, [userFinder]);
@@ -57,16 +57,20 @@ const UserFinder = ({ openUserFinderModal, setOpenUserFinderModal }) => {
       />
       <Box component={Paper} variant='outlined' mt={2} mb={2}>
         <List sx={{ overflow: 'auto', height: 300 }}>
-          {userList.map((userItem) => (
-            <ListItem key={userItem._id} divider disablePadding>
-              <ListItemButton>
-                <ListItemAvatar>
-                  <Avatar src={userItem.avatar} />
-                </ListItemAvatar>
-                <ListItemText primary={userItem.displayName} />
-              </ListItemButton>
-            </ListItem>
-          ))}
+          {userFinder.length > 0 && (
+            <>
+              {userList.map((userItem) => (
+                <ListItem key={userItem._id} divider disablePadding>
+                  <ListItemButton>
+                    <ListItemAvatar>
+                      <Avatar src={userItem.avatar} />
+                    </ListItemAvatar>
+                    <ListItemText primary={userItem.displayName} />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </>
+          )}
         </List>
       </Box>
       <Button
