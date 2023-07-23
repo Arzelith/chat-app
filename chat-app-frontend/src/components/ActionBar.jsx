@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { logoutUser } from '../features/userSlice';
+import { UserAvatar } from './';
 import {
   AppBar,
   Toolbar,
@@ -16,7 +17,7 @@ import {
 } from '@mui/material';
 import { MoreVert, ExpandLess, ExpandMore, AddComment } from '@mui/icons-material';
 
-const ActionBar = ({ variant, setOpenFormModal, setOpenUserFinderModal }) => {
+const ActionBar = ({ variant, setOpenFormModal, setOpenUserFinderModal, user }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [open, setOpen] = useState('');
   const dispatch = useDispatch();
@@ -49,12 +50,12 @@ const ActionBar = ({ variant, setOpenFormModal, setOpenUserFinderModal }) => {
 
   const StyledBadge = styled(Badge)(({ theme }) => ({
     '& .MuiBadge-badge': {
-      right: 5,
-      top: 35,
+      right: 4,
+      top: 32,
       border: `1px solid ${theme.palette.background.paper}`,
       borderRadius: '50%',
-      height: '16px',
-      width: '16px',
+      height: '14px',
+      width: '14px',
     },
   }));
 
@@ -71,7 +72,12 @@ const ActionBar = ({ variant, setOpenFormModal, setOpenUserFinderModal }) => {
                 }}
               >
                 <StyledBadge color='success' variant='dot'>
-                  <Avatar sx={{ height: '45px', width: '45px', cursor: 'pointer' }} />
+                  <UserAvatar
+                    avatar={user.avatar}
+                    height={'43px'}
+                    width={'43px'}
+                    displayName={user.displayName}
+                  ></UserAvatar>
                 </StyledBadge>
               </Box>
 

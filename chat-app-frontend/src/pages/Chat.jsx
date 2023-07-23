@@ -17,7 +17,8 @@ const PaperItem = styled(Paper)(({ theme }) => ({
 }));
 
 const Chat = () => {
-  const [chatId, setChatId] = useState('1'); //test state
+  const [chatId, setChatId] = useState(''); //test state
+  const { user } = useSelector((storage) => storage.user);
   const { serverError } = useSelector((storage) => storage.error);
   const [openFormModal, setOpenFormModal] = useState('');
   const [openUserFinderModal, setOpenUserFinderModal] = useState(false);
@@ -40,6 +41,7 @@ const Chat = () => {
               variant={'left'}
               setOpenFormModal={setOpenFormModal}
               setOpenUserFinderModal={setOpenUserFinderModal}
+              user={user}
             />
           </PaperItem>
         </Box>
@@ -51,7 +53,7 @@ const Chat = () => {
                 <ActiveChat />
               </>
             )}
-            {!chatId && <Welcome />}
+            {!chatId && <Welcome setOpenUserFinderModal={setOpenUserFinderModal} />}
           </PaperItem>
         </Box>
       </Box>

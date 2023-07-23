@@ -2,7 +2,7 @@ import { Box, Typography, Button } from '@mui/material';
 import Lottie from 'lottie-react';
 import logo from '../assets/animations/logoA.json';
 
-const Welcome = () => {
+const Welcome = ({ setOpenUserFinderModal }) => {
   return (
     <Box
       display={'flex'}
@@ -24,7 +24,11 @@ const Welcome = () => {
         Selecciona un chat desde la lista a la izquiera o crea uno nuevo para iniciar una
         conversación.
       </Typography>
-      <Button variant='contained' size='large'>
+      <Button
+        variant='contained'
+        size='large'
+        onClick={() => setOpenUserFinderModal(true)}
+      >
         Iniciar nuevo chat
       </Button>
     </Box>

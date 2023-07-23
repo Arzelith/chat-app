@@ -4,7 +4,7 @@ import { findUser } from '../features/userSlice';
 import { setServerError } from '../features/serverErrorSlice';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import debounce from '../utils/debounce';
-import { ActionModal } from './';
+import { ActionModal, UserAvatar } from './';
 import {
   TextField,
   Box,
@@ -13,7 +13,6 @@ import {
   ListItemButton,
   ListItemAvatar,
   ListItemText,
-  Avatar,
   Paper,
   Button,
 } from '@mui/material';
@@ -63,7 +62,10 @@ const UserFinder = ({ openUserFinderModal, setOpenUserFinderModal }) => {
                 <ListItem key={userItem._id} divider disablePadding>
                   <ListItemButton>
                     <ListItemAvatar>
-                      <Avatar src={userItem.avatar} />
+                      <UserAvatar
+                        avatar={userItem.avatar}
+                        displayName={userItem.displayName}
+                      ></UserAvatar>
                     </ListItemAvatar>
                     <ListItemText primary={userItem.displayName} />
                   </ListItemButton>
