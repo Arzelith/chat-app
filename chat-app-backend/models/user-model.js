@@ -35,7 +35,7 @@ const UserSchema = mongoose.Schema(
       type: String,
       enum: {
         values: ['1', '2', '3', '4'],
-        message: 'El valor de estado de usuario debe ser 1, 2 o 3',
+        message: 'El valor de estado de usuario debe ser 1, 2, 3 o 4',
       },
       default: '1',
     },
