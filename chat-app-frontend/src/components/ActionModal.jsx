@@ -17,12 +17,7 @@ const ActionModal = ({ open, children, variant, onClick, title, acceptBtnText })
   return (
     <Modal open={open}>
       <Paper sx={style} variant='outlined' className='modal'>
-        <Typography
-          variant='h4'
-          fontWeight={'bold'}
-          color={'primary'}
-          mb={variant === 'form' ? 0 : 2}
-        >
+        <Typography variant='h4' fontWeight={'bold'} color={'primary'} mb={2} mt={1}>
           {title}
         </Typography>
         {(variant === 'success' || variant === 'sessionOver') && (
