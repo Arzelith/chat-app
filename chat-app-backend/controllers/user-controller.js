@@ -69,7 +69,7 @@ const updateProfileInfo = asyncHandler(async (req, res) => {
   }
   if (user.displayName.toLowerCase() !== displayName.toLowerCase()) {
     await checkUnique(
-      { displayName: { $regex: displayName, $options: 'i' } },
+      { displayName: { $regex: new RegExp('^'+ displayName + '$', "i") } },
       'Este nombre de usuario ya se encuentra en uso'
     );
   }
@@ -127,7 +127,6 @@ const updatePassword = asyncHandler(async (req, res) => {
   await user.save();
   res.sendStatus(200);
 });
-
 
 //HELPERS
 const checkPass = (password, confirmPassword) => {
