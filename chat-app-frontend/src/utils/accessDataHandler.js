@@ -3,9 +3,9 @@ export const setAccessAndUserData = (state, tokenPayload, userPayload, storage) 
   if (tokenPayload !== null) {
     storage.setItem('MERN_CHAT_APP_ACC', tokenPayload);
     state.accessToken = storage.getItem('MERN_CHAT_APP_ACC');
-    const user = storage.getItem('MERN_CHAT_APP_USR');
-    state.user = JSON.parse(user);
   }
+  const user = storage.getItem('MERN_CHAT_APP_USR');
+  state.user = JSON.parse(user);
 };
 
 export const clearAccessAndUserData = (state, storage) => {

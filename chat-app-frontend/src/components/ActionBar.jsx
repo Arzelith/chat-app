@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { logoutUser } from '../features/userSlice';
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
+import { logoutUser, updateUserAvatar, updateUserStatus } from '../features/userSlice';
+import { setServerError } from '../features/serverErrorSlice';
 import { UserAvatar } from './';
 import {
   AppBar,
@@ -20,6 +22,7 @@ import { MoreVert, ExpandLess, ExpandMore, AddComment } from '@mui/icons-materia
 const ActionBar = ({ variant, setOpenFormModal, setOpenUserFinderModal, user }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [open, setOpen] = useState('');
+  const axiosPrivate = useAxiosPrivate();
   const dispatch = useDispatch();
 
   const handleOpenMenu = (e, menu) => {
@@ -33,29 +36,60 @@ const ActionBar = ({ variant, setOpenFormModal, setOpenUserFinderModal, user }) 
 
   const avatarMenuItems = [
     { text: 'Cambiar avatar', action: () => setOpenFormModal('avatar') },
-    { text: 'Eliminar avatar', action: () => console.log('Eliminar avatar') },
+    {
+      text: 'Eliminar avatar',
+      action: async () => {
+        try {
+          await dispatch(
+            updateUserAvatar({ axiosPrivate, values: { action: 'remove' } })
+          ).unwrap();
+        } catch (error) {
+          dispatch(setServerError(error));
+        }
+      },
+    },
   ];
 
+  const setStatus = async (status) => {
+    try {
+      await dispatch(updateUserStatus({ axiosPrivate, values: { status } })).unwrap();
+    } catch (error) {
+      dispatch(setServerError(error));
+    }
+  };
+
   const statusMenuItems = [
-    { text: 'Disponible', action: () => console.log('disponible') },
-    { text: 'No disponible', action: () => console.log('No disponible') },
-    { text: 'Ocupado', action: () => console.log('Ocupado') },
+    { text: 'Disponible', action: () => setStatus('1') },
+    { text: 'Asusente', action: () => setStatus('2') },
+    { text: 'No disponible', action: () => setStatus('3') },
   ];
 
   const verticalMenuItems = [
     { text: 'Configurar perfil', action: () => setOpenFormModal('perfil') },
     { text: 'Cambiar contraseña', action: () => setOpenFormModal('password') },
-    { text: 'Cerrar sesión', action: () => dispatch(logoutUser()) },
+    {
+      text: 'Cerrar sesión',
+      action: () => {
+        dispatch(logoutUser());
+      },
+    },
   ];
 
   const StyledBadge = styled(Badge)(({ theme }) => ({
     '& .MuiBadge-badge': {
-      right: 4,
-      top: 32,
+      top: 34,
       border: `1px solid ${theme.palette.background.paper}`,
       borderRadius: '50%',
-      height: '14px',
-      width: '14px',
+      height: '12px',
+      width: '12px',
+      backgroundColor:
+        user.status === '1'
+          ? 'green'
+          : user.status === '2'
+          ? 'yellow'
+          : user.status === '3'
+          ? 'red'
+          : '#dbe1ea',
     },
   }));
 
@@ -71,7 +105,7 @@ const ActionBar = ({ variant, setOpenFormModal, setOpenUserFinderModal, user }) 
                   handleOpenMenu(e, 'avatar');
                 }}
               >
-                <StyledBadge color='success' variant='dot'>
+                <StyledBadge overlap='circular' variant='dot'>
                   <UserAvatar
                     avatar={user.avatar}
                     height={'43px'}
@@ -103,14 +137,20 @@ const ActionBar = ({ variant, setOpenFormModal, setOpenUserFinderModal, user }) 
             <Box flexGrow={1}>
               <Box
                 display={'flex'}
-                width={50}
+                width={'fit-content'}
                 sx={{ cursor: 'pointer' }}
                 onClick={(e) => {
                   handleOpenMenu(e, 'status');
                 }}
               >
                 <Typography ml={1} fontSize={15}>
-                  Disponible
+                  {user.status === '1'
+                    ? 'Disponible'
+                    : user.status === '2'
+                    ? 'Ausente'
+                    : user.status === '3'
+                    ? 'No disponible'
+                    : 'Desconectado'}
                 </Typography>
 
                 {open === 'status' ? (

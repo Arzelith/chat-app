@@ -1,5 +1,9 @@
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { updateUserProfile, updateUserAvatar } from '../features/userSlice';
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
+import handleServerError from '../utils/serverErrorHandler';
+import { setServerError } from '../features/serverErrorSlice';
 import { ActionModal, AlertDisplay, AvatarForm, FormInput, FormBtnCombo } from '.';
 import { profileValidation } from '../validations/profileFormValidations';
 import { passwordValidation } from '../validations/passwordFormValidations';
@@ -22,6 +26,8 @@ const inputs = [
 const ModalForm = ({ setOpenFormModal, openFormModal }) => {
   const { user } = useSelector((storage) => storage.user);
   const [openSuccessModal, setOpenSuccessModal] = useState(false);
+  const axiosPrivate = useAxiosPrivate();
+  const dispatch = useDispatch();
 
   const initialValues = () => {
     if (openFormModal === 'perfil') {
@@ -62,22 +68,36 @@ const ModalForm = ({ setOpenFormModal, openFormModal }) => {
             ? passwordValidation
             : avatarValidation
         }
-        onSubmit={(values, actions) => {
+        onSubmit={async (values, actions) => {
           try {
             if (openFormModal === 'perfil') {
-              console.log('dispatch redux action profile');
+              await dispatch(updateUserProfile({ axiosPrivate, values })).unwrap();
             }
             if (openFormModal === 'password') {
-              console.log('dispatch redux action password');
+              await axiosPrivate.patch('/users/current-user/password', values);
             }
             if (openFormModal === 'avatar') {
-              console.log('dispatch redux action avatar');
               delete values.avatar;
+              values.action = 'replace';
+              await dispatch(updateUserAvatar({ axiosPrivate, values })).unwrap();
             }
             setOpenSuccessModal(true);
-            console.log(values);
           } catch (error) {
-            actions.setFieldError('general', error.message);
+            if (error.status !== 401 && error.status !== 403 && error.status < 500) {
+              if (openFormModal !== 'password') {
+                actions.setFieldError('general', error.message);
+              } else {
+                const serverError = handleServerError(error);
+                actions.setFieldError('general', serverError.message);
+              }
+            } else {
+              if (openFormModal !== 'password') {
+                dispatch(setServerError(error));
+              } else {
+                const serverError = handleServerError(error);
+                dispatch(setServerError(serverError));
+              }
+            }
           } finally {
             actions.setSubmitting(false);
           }

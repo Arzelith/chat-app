@@ -19,10 +19,10 @@ export const logoutUser = createAsyncThunk(
     try {
       await axiosPublic.get('/logout');
       thunkAPI.dispatch(clearServerError());
-      thunkAPI.dispatch(setSessionOver(false))
+      thunkAPI.dispatch(setSessionOver(false));
     } catch (error) {
       thunkAPI.dispatch(clearServerError());
-      thunkAPI.dispatch(setSessionOver(false))
+      thunkAPI.dispatch(setSessionOver(false));
       return handleServerError(error, thunkAPI);
     }
   }
@@ -33,6 +33,50 @@ export const findUser = createAsyncThunk(
   async ({ axiosPrivate, values }, thunkAPI) => {
     try {
       const { data } = await axiosPrivate.get(`/users/?search=${values}`);
+      return data;
+    } catch (error) {
+      return handleServerError(error, thunkAPI);
+    }
+  }
+);
+
+export const updateUserProfile = createAsyncThunk(
+  'user/updateUserProfile',
+  async ({ axiosPrivate, values }, thunkAPI) => {
+    try {
+      const { data } = await axiosPrivate.patch(
+        '/users/current-user/profile-info',
+        values
+      );
+      return data;
+    } catch (error) {
+      return handleServerError(error, thunkAPI);
+    }
+  }
+);
+
+export const updateUserAvatar = createAsyncThunk(
+  'user/updateUserAvatar',
+  async ({ axiosPrivate, values }, thunkAPI) => {
+    const action = values.action;
+    const avatar64 = values?.avatar64;
+    try {
+      const { data } = await axiosPrivate.patch(
+        `/users/current-user/avatar/${action}`,
+        avatar64 && { avatar64 }
+      );
+      return data;
+    } catch (error) {
+      return handleServerError(error, thunkAPI);
+    }
+  }
+);
+
+export const updateUserStatus = createAsyncThunk(
+  'user/updateUserStatus',
+  async ({ axiosPrivate, values }, thunkAPI) => {
+    try {
+      const { data } = await axiosPrivate.patch(`/users/current-user/?status=${values.status}`);
       return data;
     } catch (error) {
       return handleServerError(error, thunkAPI);
@@ -72,6 +116,18 @@ const userSlice = createSlice({
       if (action.payload) {
         state.userList = [...action.payload];
       }
+    });
+    builder.addCase(updateUserProfile.fulfilled, (state, action) => {
+      const { user } = action.payload;
+      setAccessAndUserData(state, null, user, localStorage);
+    });
+    builder.addCase(updateUserAvatar.fulfilled, (state, action) => {
+      const { user } = action.payload;
+      setAccessAndUserData(state, null, user, localStorage);
+    });
+    builder.addCase(updateUserStatus.fulfilled, (state, action) => {
+      const { user } = action.payload;
+      setAccessAndUserData(state, null, user, localStorage);
     });
   },
 });
