@@ -17,7 +17,7 @@ const ActionModal = ({ open, children, variant, onClick, title, acceptBtnText })
   return (
     <Modal open={open}>
       <Paper sx={style} variant='outlined' className='modal'>
-        <Typography variant='h4' fontWeight={'bold'} color={'primary'} mb={2} mt={1}>
+        <Typography variant='h4' fontWeight={'bold'} color={'primary'} mb={1} mt={1}>
           {title}
         </Typography>
         {(variant === 'success' || variant === 'sessionOver') && (
@@ -26,7 +26,7 @@ const ActionModal = ({ open, children, variant, onClick, title, acceptBtnText })
             type='button'
             variant='contained'
             color={variant === 'success' ? 'success' : 'primary'}
-            sx={{ width: 'fit-content' }}
+            sx={{ width: 'fit-content', mt:1 }}
             onClick={onClick}
           >
             {acceptBtnText}
