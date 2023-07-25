@@ -37,7 +37,7 @@ const ActionBar = ({ variant, setOpenFormModal, setOpenUserFinderModal, user }) 
   ];
 
   const statusMenuItems = [
-    { text: 'Dsiponible', action: () => console.log('disponible') },
+    { text: 'Disponible', action: () => console.log('disponible') },
     { text: 'No disponible', action: () => console.log('No disponible') },
     { text: 'Ocupado', action: () => console.log('Ocupado') },
   ];
@@ -100,24 +100,27 @@ const ActionBar = ({ variant, setOpenFormModal, setOpenUserFinderModal, user }) 
               </Menu>
             </Box>
 
-            <Box
-              display={'flex'}
-              flexGrow={1}
-              sx={{ cursor: 'pointer' }}
-              onClick={(e) => {
-                handleOpenMenu(e, 'status');
-              }}
-            >
-              <Typography ml={1} fontSize={15}>
-                Disponible
-              </Typography>
+            <Box flexGrow={1}>
+              <Box
+                display={'flex'}
+                width={50}
+                sx={{ cursor: 'pointer' }}
+                onClick={(e) => {
+                  handleOpenMenu(e, 'status');
+                }}
+              >
+                <Typography ml={1} fontSize={15}>
+                  Disponible
+                </Typography>
 
-              {open === 'status' ? (
-                <ExpandLess sx={{ height: '22px' }} />
-              ) : (
-                <ExpandMore sx={{ height: '22px' }} />
-              )}
+                {open === 'status' ? (
+                  <ExpandLess sx={{ height: '22px' }} />
+                ) : (
+                  <ExpandMore sx={{ height: '22px' }} />
+                )}
+              </Box>
             </Box>
+
             <Menu anchorEl={anchorEl} open={open === 'status'} onClose={handleCloseMenu}>
               {statusMenuItems.map((menuItem) => (
                 <MenuItem
