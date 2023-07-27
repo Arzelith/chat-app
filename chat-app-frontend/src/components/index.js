@@ -13,6 +13,7 @@ import FormBtnCombo from './FormBtnCombo';
 import UserFinder from './UserFinder';
 import DisplayError from './DisplayError';
 import UserAvatar from './UserAvatar';
+import UserList from './UserList'
 
 export {
   FormInput,
@@ -29,5 +30,6 @@ export {
   FormBtnCombo,
   UserFinder,
   DisplayError,
-  UserAvatar
+  UserAvatar,
+  UserList
 };
