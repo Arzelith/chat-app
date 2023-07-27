@@ -88,6 +88,7 @@ const UserFinder = ({ openUserFinderModal, setOpenUserFinderModal }) => {
         onChange={handleChange}
         autoComplete='off'
         margin='dense'
+        disabled={activeTab == 2 && favoriteList.length === 0}
         value={userFinder}
       />
       <TabContext value={activeTab}>
