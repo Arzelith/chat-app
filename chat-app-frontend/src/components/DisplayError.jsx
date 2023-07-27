@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { PaperWrapper } from './';
 import { Button, Typography, Box } from '@mui/material';
 import { useDispatch } from 'react-redux';
@@ -7,7 +7,13 @@ import { logoutUser } from '../features/userSlice';
 const DisplayError = ({ message, status }) => {
   const dispatch = useDispatch();
   const location = useLocation();
-  const navigate = useNavigate();
+  const refresh = () => {
+    if (status >= 500 && location.pathname === '/') {
+      dispatch(logoutUser());
+    } else {
+      window.location.reload(false);
+    }
+  };
   return (
     <Box component={PaperWrapper} alignItems={'center'}>
       <Typography variant='h4' fontWeight={'bold'}>
@@ -21,10 +27,10 @@ const DisplayError = ({ message, status }) => {
         size='large'
         sx={{ width: 'fit-content', mt: 2 }}
         onClick={() => {
-          location.pathname === '/' ? dispatch(logoutUser()) : navigate('/');
+          refresh();
         }}
       >
-        {location.pathname === '/' ? 'Volver a login' : 'Volver a chat'}
+        Aceptar
       </Button>
     </Box>
   );
