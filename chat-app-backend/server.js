@@ -9,6 +9,7 @@ const refreshRoutes = require('./routes/refresh-routes');
 const logoutRoutes = require('./routes/logout-routes');
 const chatRoutes = require('./routes/chat-routes');
 const messageRoutes = require('./routes/message-routes');
+const favoriteRoutes = require('./routes/favorite-routes');
 //END ROUTE-IMPORTS
 const cookieParser = require('cookie-parser');
 const apiErrorHandler = require('./middlewares/api-error-handler');
@@ -44,6 +45,7 @@ app.use(`${v1}/refresh`, refreshRoutes);
 app.use(`${v1}/logout`, logoutRoutes);
 app.use(`${v1}/chat`, chatRoutes);
 app.use(`${v1}/message`, messageRoutes);
+app.use(`${v1}/favorite`, favoriteRoutes);
 
 //END ROUTES
 app.use(apiErrorHandler);
