@@ -7,6 +7,7 @@ import {
   ActiveChat,
   ModalForm,
   UserFinder,
+  ChatList,
 } from '../components';
 import { Paper, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -17,8 +18,8 @@ const PaperItem = styled(Paper)(({ theme }) => ({
 }));
 
 const Chat = () => {
-  const [chatId, setChatId] = useState(''); //test state
   const { user } = useSelector((storage) => storage.user);
+  const { currentChat } = useSelector((storage) => storage.chat);
   const { serverError } = useSelector((storage) => storage.error);
   const [openFormModal, setOpenFormModal] = useState('');
   const [openUserFinderModal, setOpenUserFinderModal] = useState(false);
@@ -34,7 +35,7 @@ const Chat = () => {
         <Box
           mr={{ xs: 0, md: 2 }}
           width={{ xs: '100%', md: 400 }}
-          display={{ xs: chatId ? 'none' : 'block', md: 'block' }}
+          display={{ xs: currentChat._id ? 'none' : 'block', md: 'block' }}
         >
           <PaperItem variant='outlined'>
             <ActionBar
@@ -43,17 +44,26 @@ const Chat = () => {
               setOpenUserFinderModal={setOpenUserFinderModal}
               user={user}
             />
+            <ChatList user={user} />
           </PaperItem>
         </Box>
-        <Box flexGrow={1} display={{ xs: chatId ? 'block' : 'none', md: 'block' }}>
+        <Box
+          flexGrow={1}
+          display={{ xs: currentChat._id ? 'block' : 'none', md: 'block' }}
+        >
           <PaperItem variant='outlined' sx={{ position: 'relative' }}>
-            {chatId && (
+            {currentChat._id && (
               <>
-                <ActionBar variant={'right'} />
+                <ActionBar
+                  variant={'right'}
+                  user={currentChat.users.find((item) => item._id !== user._id)}
+                />
                 <ActiveChat />
               </>
             )}
-            {!chatId && <Welcome setOpenUserFinderModal={setOpenUserFinderModal} />}
+            {!currentChat._id && (
+              <Welcome setOpenUserFinderModal={setOpenUserFinderModal} />
+            )}
           </PaperItem>
         </Box>
       </Box>

@@ -8,7 +8,8 @@
   border-radius: 6px;
 }
 
-.text-box {
-  overflow: auto;
+.text-box, .chat-list {
+  overflow-y: auto;
+  overflow-x: hidden;
   height: calc(100% - 133px);
 }

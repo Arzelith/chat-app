@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { findUser } from '../features/userSlice';
 import {
@@ -9,7 +9,6 @@ import {
 } from '../features/favoriteSlice';
 import { setServerError } from '../features/serverErrorSlice';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
-// import debounce from '../utils/debounce';
 import { ActionModal, UserList } from './';
 import { TextField, Box, Paper, Button, Tab } from '@mui/material';
 import { TabContext, TabList } from '@mui/lab';
@@ -26,17 +25,18 @@ const UserFinder = ({ openUserFinderModal, setOpenUserFinderModal }) => {
   const axiosPrivate = useAxiosPrivate();
 
   const handleChange = (e) => {
-    setUserFinder(e.target.value);
+    const target = e.target.value;
+    setUserFinder(target);
+    activeTab === '1' ? getUserList(target) : dispatch(filterFavorites(target));
   };
-  // const debounceChange = useMemo(() => debounce(handleChange, 500));
 
   const handleTabChange = (e, newValue) => {
     setActiveTab(newValue);
   };
 
-  const getUserList = async () => {
+  const getUserList = async (target) => {
     try {
-      await dispatch(findUser({ axiosPrivate, values: userFinder })).unwrap();
+      await dispatch(findUser({ axiosPrivate, values: target })).unwrap();
     } catch (error) {
       dispatch(setServerError(error));
     }
@@ -70,15 +70,6 @@ const UserFinder = ({ openUserFinderModal, setOpenUserFinderModal }) => {
     getFavoriteList();
   }, []);
 
-  useEffect(() => {
-    activeTab === '1' ? getUserList() : dispatch(filterFavorites(userFinder));
-  }, [userFinder]);
-
-  useEffect(() => {
-    activeTab === '2' && getFavoriteList();
-    setUserFinder('');
-  }, [activeTab]);
-
   return (
     <ActionModal title={'Inicia un chat'} variant={'finder'} open={openUserFinderModal}>
       <TextField
@@ -94,8 +85,15 @@ const UserFinder = ({ openUserFinderModal, setOpenUserFinderModal }) => {
       <TabContext value={activeTab}>
         <Box component={Paper} variant='outlined' mt={1} mb={2} p={2}>
           <TabList onChange={handleTabChange}>
-            <Tab label='Nuevo chat' value='1' />
-            <Tab label='Favoritos' value='2' />
+            <Tab label='Nuevo chat' value='1' onClick={() => setUserFinder('')} />
+            <Tab
+              label='Favoritos'
+              value='2'
+              onClick={() => {
+                getFavoriteList();
+                setUserFinder('');
+              }}
+            />
           </TabList>
           <UserList
             userList={userList}
@@ -105,6 +103,7 @@ const UserFinder = ({ openUserFinderModal, setOpenUserFinderModal }) => {
             addNewFavorite={addNewFavorite}
             deleteFavorite={deleteFavorite}
             filteredFavoriteList={filteredFavoriteList}
+            setOpenUserFinderModal={setOpenUserFinderModal}
           />
         </Box>
       </TabContext>

@@ -1,3 +1,7 @@
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
+import { useDispatch } from 'react-redux';
+import { getOrCreateChat } from '../features/chatSlice';
+import { setServerError } from '../features/serverErrorSlice';
 import {
   Box,
   List,
@@ -7,6 +11,7 @@ import {
   Divider,
   IconButton,
   Typography,
+  ListItemButton,
 } from '@mui/material';
 import { UserAvatar } from './';
 import { StarBorder, Star } from '@mui/icons-material';
@@ -20,7 +25,11 @@ const UserList = ({
   deleteFavorite,
   userFinder,
   filteredFavoriteList,
+  setOpenUserFinderModal,
 }) => {
+  const axiosPrivate = useAxiosPrivate();
+  const dispatch = useDispatch();
+
   const isFavorite = (userItem) => {
     const index = favoriteList.findIndex((object) => object?._id === userItem?._id);
     return index;
@@ -40,6 +49,16 @@ const UserList = ({
       return [];
     }
   };
+
+  const enterChat = async (values) => {
+    try {
+      await dispatch(getOrCreateChat({ axiosPrivate, values })).unwrap();
+      setOpenUserFinderModal(false);
+    } catch (error) {
+      dispatch(setServerError(error));
+    }
+  };
+
   return (
     <List sx={{ overflow: 'auto', height: 300 }}>
       <TabPanel value={value} sx={{ p: 0 }}>
@@ -47,15 +66,17 @@ const UserList = ({
           <>
             <Divider />
             {rightList().map((userItem) => (
-              <ListItem key={userItem._id} divider>
-                <ListItemAvatar>
-                  <UserAvatar
-                    avatar={userItem.avatar}
-                    displayName={userItem.displayName}
-                  ></UserAvatar>
-                </ListItemAvatar>
-                <ListItemText primary={userItem.displayName} />
-                <Box>
+              <ListItem key={userItem._id} divider disablePadding>
+                <ListItemButton onClick={() => enterChat(userItem._id)}>
+                  <ListItemAvatar>
+                    <UserAvatar
+                      avatar={userItem.avatar}
+                      displayName={userItem.displayName}
+                    ></UserAvatar>
+                  </ListItemAvatar>
+                  <ListItemText primary={userItem.displayName} />
+                </ListItemButton>
+                <Box position={'absolute'} right={10}>
                   {isFavorite(userItem) !== -1 ? (
                     <IconButton onClick={() => deleteFavorite(userItem._id)}>
                       <Star color='primary' />

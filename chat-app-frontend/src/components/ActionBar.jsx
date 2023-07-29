@@ -1,21 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import { logoutUser, updateUserAvatar, updateUserStatus } from '../features/userSlice';
 import { setServerError } from '../features/serverErrorSlice';
-import { UserAvatar } from './';
+import { UserAvatar, CustomBadge } from './';
 import {
   AppBar,
   Toolbar,
-  Avatar,
   IconButton,
   Typography,
   Box,
   MenuItem,
-  Button,
-  Badge,
   Menu,
-  styled,
 } from '@mui/material';
 import { MoreVert, ExpandLess, ExpandMore, AddComment } from '@mui/icons-material';
 
@@ -75,24 +71,6 @@ const ActionBar = ({ variant, setOpenFormModal, setOpenUserFinderModal, user }) 
     },
   ];
 
-  const StyledBadge = styled(Badge)(({ theme }) => ({
-    '& .MuiBadge-badge': {
-      top: 34,
-      border: `1px solid ${theme.palette.background.paper}`,
-      borderRadius: '50%',
-      height: '12px',
-      width: '12px',
-      backgroundColor:
-        user.status === '1'
-          ? 'green'
-          : user.status === '2'
-          ? 'yellow'
-          : user.status === '3'
-          ? 'red'
-          : '#dbe1ea',
-    },
-  }));
-
   return (
     <AppBar position='static'>
       <Toolbar>
@@ -105,14 +83,21 @@ const ActionBar = ({ variant, setOpenFormModal, setOpenUserFinderModal, user }) 
                   handleOpenMenu(e, 'avatar');
                 }}
               >
-                <StyledBadge overlap='circular' variant='dot'>
+                <CustomBadge
+                  top={34}
+                  height={'12px'}
+                  width={'12px'}
+                  user={user}
+                  overlap='circular'
+                  variant='dot'
+                >
                   <UserAvatar
                     avatar={user.avatar}
                     height={'43px'}
                     width={'43px'}
                     displayName={user.displayName}
                   ></UserAvatar>
-                </StyledBadge>
+                </CustomBadge>
               </Box>
 
               <Menu
@@ -213,15 +198,24 @@ const ActionBar = ({ variant, setOpenFormModal, setOpenUserFinderModal, user }) 
         )}
         {variant === 'right' && (
           <>
-            <StyledBadge variant='dot' color='success'>
-              <Avatar sx={{ height: '45px', width: '45px' }} />
-            </StyledBadge>
+            <CustomBadge
+              top={34}
+              height={'12px'}
+              width={'12px'}
+              user={user}
+              overlap='circular'
+              variant='dot'
+            >
+              <UserAvatar
+                avatar={user.avatar}
+                height={'43px'}
+                width={'43px'}
+                displayName={user.displayName}
+              ></UserAvatar>
+            </CustomBadge>
             <Typography variant='h6' ml={1} flexGrow={1}>
-              Javier
+              {user.displayName}
             </Typography>
-            <Button size='large' color='info' variant='contained'>
-              cerrar chat
-            </Button>
           </>
         )}
       </Toolbar>

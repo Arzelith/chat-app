@@ -13,7 +13,9 @@ import FormBtnCombo from './FormBtnCombo';
 import UserFinder from './UserFinder';
 import DisplayError from './DisplayError';
 import UserAvatar from './UserAvatar';
-import UserList from './UserList'
+import UserList from './UserList';
+import ChatList from './ChatList';
+import CustomBadge from './CustomBadge';
 
 export {
   FormInput,
@@ -31,5 +33,7 @@ export {
   UserFinder,
   DisplayError,
   UserAvatar,
-  UserList
+  UserList,
+  ChatList,
+  CustomBadge,
 };
