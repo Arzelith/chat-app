@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import { setServerError } from '../features/serverErrorSlice';
-import { getAllChats } from '../features/chatSlice';
+import { getAllChats, sendMessage } from '../features/chatSlice';
 import {
   PageWrapper,
   ActionBar,
@@ -22,12 +22,11 @@ const PaperItem = styled(Paper)(() => ({
 
 const Chat = () => {
   const { user } = useSelector((storage) => storage.user);
-  const { currentChat, chatMessages } = useSelector(
-    (storage) => storage.chat
-  );
+  const { currentChat, chatMessages } = useSelector((storage) => storage.chat);
   const { serverError } = useSelector((storage) => storage.error);
   const [openFormModal, setOpenFormModal] = useState('');
   const [openUserFinderModal, setOpenUserFinderModal] = useState(false);
+  const [newMessage, setNewMessage] = useState('');
   const dispatch = useDispatch();
   const axiosPrivate = useAxiosPrivate();
 
@@ -36,6 +35,23 @@ const Chat = () => {
       await dispatch(getAllChats({ axiosPrivate })).unwrap();
     } catch (error) {
       dispatch(setServerError(error));
+    }
+  };
+
+  const sendNewMessage = async (e) => {
+    e.preventDefault();
+    if (newMessage.trim().length > 0) {
+      try {
+        await dispatch(
+          sendMessage({
+            axiosPrivate,
+            values: { chatId: currentChat._id, content: newMessage },
+          })
+        ).unwrap();
+        setNewMessage('');
+      } catch (error) {
+        dispatch(setServerError(error));
+      }
     }
   };
 
@@ -86,6 +102,10 @@ const Chat = () => {
                     (item) => item.chat === currentChat._id
                   )}
                   user={user}
+                  newMessage={newMessage}
+                  setNewMessage={setNewMessage}
+                  sendNewMessage={sendNewMessage}
+                  currentChat={currentChat}
                 />
               </>
             )}

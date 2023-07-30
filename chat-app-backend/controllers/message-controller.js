@@ -31,7 +31,6 @@ const createMessage = asyncHandler(async (req, res) => {
   res.status(201).json({ message });
 });
 
-
 const getAllMessages = asyncHandler(async (req, res) => {
   const chatId = req.params.chatId;
   if (!chatId) {
@@ -39,7 +38,8 @@ const getAllMessages = asyncHandler(async (req, res) => {
   }
   const messages = await Message.find({ chat: chatId })
     .populate('sender', 'displayName email avatar status')
-    .populate('chat');
+    .populate('chat')
+    .sort({ updatedAt: -1 });
   // const chat = await Chat.findById(chatId);
   // if (!chat.enabledBy.includes(req.user._id.toString())) {
   //   chat.enabledBy.push(req.user._id);

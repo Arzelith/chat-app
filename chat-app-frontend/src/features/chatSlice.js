@@ -34,6 +34,21 @@ export const getOrCreateChat = createAsyncThunk(
   }
 );
 
+export const sendMessage = createAsyncThunk(
+  'chat/sendMessage',
+  async ({ axiosPrivate, values }, thunkAPI) => {
+    try {
+      const { data } = await axiosPrivate.post('/message', {
+        chatId: values.chatId,
+        content: values.content,
+      });
+      return data;
+    } catch (error) {
+      return handleServerError(error, thunkAPI);
+    }
+  }
+);
+
 const initialState = {
   chatList: [],
   currentChat: {},
@@ -49,6 +64,7 @@ const chatSlice = createSlice({
     builder.addCase(getAllChats.fulfilled, (state, action) => {
       state.chatList = [...action.payload.chatList];
       state.chatMessages = [...action.payload.chatMessages];
+      console.log(state.chatMessages);
     });
     builder.addCase(getOrCreateChat.fulfilled, (state, action) => {
       const chat = action.payload.chat.chat;
@@ -59,6 +75,11 @@ const chatSlice = createSlice({
         state.chatList = [chat, ...state.chatList];
       }
       state.currentChat = chat;
+    });
+    builder.addCase(sendMessage.fulfilled, (state, action) => {
+      const newMessage = action.payload.message;
+      const chatId = action.payload.message.chat._id;
+      state.chatMessages.find((item) => item.chat === chatId).messages.unshift(newMessage);
     });
   },
 });
