@@ -1,8 +1,7 @@
-import { useEffect } from 'react';
 import { UserAvatar, CustomBadge } from './';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllChats, getOrCreateChat } from '../features/chatSlice';
+import { getOrCreateChat } from '../features/chatSlice';
 import { setServerError } from '../features/serverErrorSlice';
 import {
   List,
@@ -21,16 +20,9 @@ const ChatList = ({ user }) => {
   const axiosPrivate = useAxiosPrivate();
   const dispatch = useDispatch();
 
-  const getChats = async () => {
-    try {
-      await dispatch(getAllChats({ axiosPrivate })).unwrap();
-    } catch (error) {
-      dispatch(setServerError(error));
-    }
-  };
-
   const correctUser = (chatItem) => {
-    return chatItem.users.find(item=>item._id!==user._id)
+    const index = chatItem.users.findIndex((item) => item._id !== user._id);
+    return chatItem.users[index];
   };
 
   const latestMessageText = (chatItem) => {
@@ -51,9 +43,6 @@ const ChatList = ({ user }) => {
     }
   };
 
-  useEffect(() => {
-    getChats();
-  }, []);
   return (
     <List className='chat-list'>
       <Divider />

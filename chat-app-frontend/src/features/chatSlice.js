@@ -25,9 +25,22 @@ export const getOrCreateChat = createAsyncThunk(
   }
 );
 
+export const getCurrentChatMessages = createAsyncThunk(
+  'chat/getActiveChatMessages',
+  async ({ axiosPrivate, values }, thunkAPI) => {
+    try {
+      const { data } = await axiosPrivate.get(`/message/${values}`);
+      return data
+    } catch (error) {
+      return handleServerError(error, thunkAPI);
+    }
+  }
+);
+
 const initialState = {
   chatList: [],
   currentChat: {},
+  currentChatMessages: [],
 };
 
 const chatSlice = createSlice({
@@ -48,6 +61,9 @@ const chatSlice = createSlice({
       }
       state.currentChat = chat;
     });
+    builder.addCase(getCurrentChatMessages.fulfilled,(state, action)=>{
+      state.currentChatMessages = [...action.payload]
+    })
   },
 });
 
