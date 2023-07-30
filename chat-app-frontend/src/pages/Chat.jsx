@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import { setServerError } from '../features/serverErrorSlice';
-import { getCurrentChatMessages, getAllChats } from '../features/chatSlice';
+import { getAllChats } from '../features/chatSlice';
 import {
   PageWrapper,
   ActionBar,
@@ -22,11 +22,12 @@ const PaperItem = styled(Paper)(() => ({
 
 const Chat = () => {
   const { user } = useSelector((storage) => storage.user);
-  const { currentChat, currentChatMessages } = useSelector((storage) => storage.chat);
+  const { currentChat, chatMessages } = useSelector(
+    (storage) => storage.chat
+  );
   const { serverError } = useSelector((storage) => storage.error);
   const [openFormModal, setOpenFormModal] = useState('');
   const [openUserFinderModal, setOpenUserFinderModal] = useState(false);
-  const [loadingMessages, setLoadingMessages] = useState(true);
   const dispatch = useDispatch();
   const axiosPrivate = useAxiosPrivate();
 
@@ -38,28 +39,9 @@ const Chat = () => {
     }
   };
 
-  const getMessages = async () => {
-    try {
-      setLoadingMessages(true);
-      await dispatch(
-        getCurrentChatMessages({ axiosPrivate, values: currentChat._id })
-      ).unwrap();
-      setLoadingMessages(false);
-    } catch (error) {
-      setLoadingMessages(false);
-      dispatch(setServerError(error));
-    }
-  };
-
   useEffect(() => {
     getAvailableChats();
   }, []);
-
-  useEffect(() => {
-    if (currentChat._id) {
-      getMessages();
-    }
-  }, [currentChat._id]);
 
   return (
     <PageWrapper serverError={serverError}>
@@ -86,7 +68,11 @@ const Chat = () => {
         </Box>
         <Box
           flexGrow={1}
-          display={{ xs: currentChat._id ? 'block' : 'none', md: 'block', position:'relative' }}
+          display={{
+            xs: currentChat._id ? 'block' : 'none',
+            md: 'block',
+            position: 'relative',
+          }}
         >
           <PaperItem variant='outlined'>
             {currentChat._id && (
@@ -96,8 +82,9 @@ const Chat = () => {
                   user={currentChat.users.find((item) => item._id !== user._id)}
                 />
                 <ActiveChat
-                  currentChatMessages={currentChatMessages}
-                  loadingMessages={loadingMessages}
+                  chatMessages={chatMessages.find(
+                    (item) => item.chat === currentChat._id
+                  )}
                   user={user}
                 />
               </>

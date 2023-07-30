@@ -12,6 +12,13 @@ const getOrCreateOneToOneChat = asyncHandler(async (req, res) => {
   })
     .populate('users', 'displayName email avatar status')
     .populate('latestMessage');
+  if (chat.latestMessage) {
+    if (!chat.latestMessage.readBy.includes(req.user._id)) {
+      chat.latestMessage.readBy.push(req.user._id);
+      await chat.save();
+    }
+  }
+
   if (chat) {
     return res.status(200).json({ chat });
   } else {

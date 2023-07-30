@@ -6,7 +6,16 @@ export const getAllChats = createAsyncThunk(
   async ({ axiosPrivate }, thunkAPI) => {
     try {
       const { data } = await axiosPrivate.get('/chat');
-      return data;
+      const chatIds = data.map((item) => item._id);
+      let chatMessages = [];
+      await Promise.all(
+        chatIds.map((obj) =>
+          axiosPrivate.get('/message/' + obj).then((response) => {
+            chatMessages.push({ chat: obj, messages: response.data });
+          })
+        )
+      );
+      return { chatList: data, chatMessages };
     } catch (error) {
       return handleServerError(error, thunkAPI);
     }
@@ -17,20 +26,8 @@ export const getOrCreateChat = createAsyncThunk(
   'chat/getOrCreateChat',
   async ({ axiosPrivate, values }, thunkAPI) => {
     try {
-      const { data } = await axiosPrivate.post('/chat', { userId: values });
-      return data;
-    } catch (error) {
-      return handleServerError(error, thunkAPI);
-    }
-  }
-);
-
-export const getCurrentChatMessages = createAsyncThunk(
-  'chat/getActiveChatMessages',
-  async ({ axiosPrivate, values }, thunkAPI) => {
-    try {
-      const { data } = await axiosPrivate.get(`/message/${values}`);
-      return data
+      const chatResponse = await axiosPrivate.post('/chat', { userId: values });
+      return { chat: chatResponse.data };
     } catch (error) {
       return handleServerError(error, thunkAPI);
     }
@@ -41,6 +38,7 @@ const initialState = {
   chatList: [],
   currentChat: {},
   currentChatMessages: [],
+  chatMessages: [],
 };
 
 const chatSlice = createSlice({
@@ -49,10 +47,11 @@ const chatSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getAllChats.fulfilled, (state, action) => {
-      state.chatList = [...action.payload];
+      state.chatList = [...action.payload.chatList];
+      state.chatMessages = [...action.payload.chatMessages];
     });
     builder.addCase(getOrCreateChat.fulfilled, (state, action) => {
-      const chat = action.payload.chat;
+      const chat = action.payload.chat.chat;
       const index = state.chatList.findIndex((chatItem) => chatItem._id === chat._id);
       if (index !== -1) {
         state.chatList[index] = chat;
@@ -61,9 +60,6 @@ const chatSlice = createSlice({
       }
       state.currentChat = chat;
     });
-    builder.addCase(getCurrentChatMessages.fulfilled,(state, action)=>{
-      state.currentChatMessages = [...action.payload]
-    })
   },
 });
 

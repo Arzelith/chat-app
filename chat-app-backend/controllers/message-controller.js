@@ -31,6 +31,7 @@ const createMessage = asyncHandler(async (req, res) => {
   res.status(201).json({ message });
 });
 
+
 const getAllMessages = asyncHandler(async (req, res) => {
   const chatId = req.params.chatId;
   if (!chatId) {
@@ -39,17 +40,11 @@ const getAllMessages = asyncHandler(async (req, res) => {
   const messages = await Message.find({ chat: chatId })
     .populate('sender', 'displayName email avatar status')
     .populate('chat');
-  await Message.updateMany(
-    {
-      $and: [{ chat: chatId }, { readBy: { $nin: [req.user._id] } }],
-    },
-    { $push: { readBy: req.user._id } }
-  );
-  const chat = await Chat.findById(chatId);
-  if (!chat.enabledBy.includes(req.user._id.toString())) {
-    chat.enabledBy.push(req.user._id);
-    await chat.save();
-  }
+  // const chat = await Chat.findById(chatId);
+  // if (!chat.enabledBy.includes(req.user._id.toString())) {
+  //   chat.enabledBy.push(req.user._id);
+  //   await chat.save();
+  // }
   res.status(200).json(messages);
 });
 
