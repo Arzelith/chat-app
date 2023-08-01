@@ -59,7 +59,11 @@ const initialState = {
 const chatSlice = createSlice({
   name: 'chat',
   initialState,
-  reducers: {},
+  reducers: {
+    exitCurrentChat: (state) => {
+      state.currentChat = {};
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(getAllChats.fulfilled, (state, action) => {
       state.chatList = [...action.payload.chatList];
@@ -79,9 +83,11 @@ const chatSlice = createSlice({
     builder.addCase(sendMessage.fulfilled, (state, action) => {
       const newMessage = action.payload.message;
       const chatId = action.payload.message.chat._id;
-      state.chatMessages.find((item) => item.chat === chatId).messages.unshift(newMessage);
+      state.chatMessages
+        .find((item) => item.chat === chatId)
+        .messages.unshift(newMessage);
     });
   },
 });
-
+export const { exitCurrentChat } = chatSlice.actions;
 export default chatSlice.reducer;

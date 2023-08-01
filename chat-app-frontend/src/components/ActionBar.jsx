@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import { logoutUser, updateUserAvatar, updateUserStatus } from '../features/userSlice';
+import { exitCurrentChat } from '../features/chatSlice';
 import { setServerError } from '../features/serverErrorSlice';
 import { UserAvatar, CustomBadge } from './';
 import {
@@ -13,7 +14,7 @@ import {
   MenuItem,
   Menu,
 } from '@mui/material';
-import { MoreVert, ExpandLess, ExpandMore, AddComment } from '@mui/icons-material';
+import { MoreVert, ExpandLess, ExpandMore, AddComment, ArrowBack } from '@mui/icons-material';
 
 const ActionBar = ({ variant, setOpenFormModal, setOpenUserFinderModal, user }) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -216,6 +217,15 @@ const ActionBar = ({ variant, setOpenFormModal, setOpenUserFinderModal, user }) 
             <Typography variant='h6' ml={1} flexGrow={1}>
               {user.displayName}
             </Typography>
+            <IconButton
+              autoFocus
+              color='inherit'
+              onClick={() => {
+                dispatch(exitCurrentChat())
+              }}
+            >
+              <ArrowBack fontSize={'medium'}/>
+            </IconButton>
           </>
         )}
       </Toolbar>
