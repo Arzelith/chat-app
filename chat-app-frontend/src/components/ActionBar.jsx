@@ -14,9 +14,21 @@ import {
   MenuItem,
   Menu,
 } from '@mui/material';
-import { MoreVert, ExpandLess, ExpandMore, AddComment, ArrowBack } from '@mui/icons-material';
+import {
+  MoreVert,
+  ExpandLess,
+  ExpandMore,
+  AddComment,
+  ArrowBack,
+} from '@mui/icons-material';
 
-const ActionBar = ({ variant, setOpenFormModal, setOpenUserFinderModal, user }) => {
+const ActionBar = ({
+  variant,
+  setOpenFormModal,
+  setOpenUserFinderModal,
+  user,
+  disconnect,
+}) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [open, setOpen] = useState('');
   const axiosPrivate = useAxiosPrivate();
@@ -68,6 +80,7 @@ const ActionBar = ({ variant, setOpenFormModal, setOpenUserFinderModal, user }) 
       text: 'Cerrar sesión',
       action: () => {
         dispatch(logoutUser());
+        disconnect();
       },
     },
   ];
@@ -199,21 +212,12 @@ const ActionBar = ({ variant, setOpenFormModal, setOpenUserFinderModal, user }) 
         )}
         {variant === 'right' && (
           <>
-            <CustomBadge
-              top={34}
-              height={'12px'}
-              width={'12px'}
-              user={user}
-              overlap='circular'
-              variant='dot'
-            >
-              <UserAvatar
-                avatar={user.avatar}
-                height={'43px'}
-                width={'43px'}
-                displayName={user.displayName}
-              ></UserAvatar>
-            </CustomBadge>
+            <UserAvatar
+              avatar={user.avatar}
+              height={'43px'}
+              width={'43px'}
+              displayName={user.displayName}
+            ></UserAvatar>
             <Typography variant='h6' ml={1} flexGrow={1}>
               {user.displayName}
             </Typography>
@@ -221,10 +225,10 @@ const ActionBar = ({ variant, setOpenFormModal, setOpenUserFinderModal, user }) 
               autoFocus
               color='inherit'
               onClick={() => {
-                dispatch(exitCurrentChat())
+                dispatch(exitCurrentChat());
               }}
             >
-              <ArrowBack fontSize={'medium'}/>
+              <ArrowBack fontSize={'medium'} />
             </IconButton>
           </>
         )}

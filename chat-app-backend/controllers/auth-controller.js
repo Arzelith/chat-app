@@ -19,6 +19,7 @@ const login = asyncHandler(async (req, res) => {
   const accessToken = await generateAccessToken(user);
   const refreshToken = await generateRefreshToken(user, res);
   user.refreshToken = refreshToken;
+  user.isOnline = '1';
   await user.save();
 
   res.status(200).json({ user, accessToken });

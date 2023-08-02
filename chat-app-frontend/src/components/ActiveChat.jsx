@@ -27,7 +27,7 @@ const ActiveChat = ({
         }}
         className='text-box'
       >
-        {chatMessages.messages.map((messageItem) => (
+        {chatMessages?.messages.map((messageItem) => (
           <Box
             key={messageItem._id}
             display={'flex'}

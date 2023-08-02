@@ -39,6 +39,10 @@ const UserSchema = mongoose.Schema(
       },
       default: '1',
     },
+    isOnline:{
+      type:String,
+      default:'0'
+    },
     refreshToken: { type: String },
   },
   {

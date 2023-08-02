@@ -26,8 +26,8 @@ export const getOrCreateChat = createAsyncThunk(
   'chat/getOrCreateChat',
   async ({ axiosPrivate, values }, thunkAPI) => {
     try {
-      const chatResponse = await axiosPrivate.post('/chat', { userId: values });
-      return { chat: chatResponse.data };
+      const chatResponse = await axiosPrivate.post('/chat', { userId: values.userId });
+      return { chat: chatResponse.data, isCurrentChat: values.isCurrentChat };
     } catch (error) {
       return handleServerError(error, thunkAPI);
     }
@@ -68,17 +68,24 @@ const chatSlice = createSlice({
     builder.addCase(getAllChats.fulfilled, (state, action) => {
       state.chatList = [...action.payload.chatList];
       state.chatMessages = [...action.payload.chatMessages];
-      console.log(state.chatMessages);
     });
     builder.addCase(getOrCreateChat.fulfilled, (state, action) => {
       const chat = action.payload.chat.chat;
       const index = state.chatList.findIndex((chatItem) => chatItem._id === chat._id);
+      const isMessage = state.chatMessages.findIndex(
+        (messageItem) => messageItem.chat === chat._id
+      );
       if (index !== -1) {
         state.chatList[index] = chat;
       } else {
         state.chatList = [chat, ...state.chatList];
       }
-      state.currentChat = chat;
+      if (isMessage === -1) {
+        state.chatMessages.push({ chat: chat._id, messages: [] });
+      }
+      if (action.payload?.isCurrentChat) {
+        state.currentChat = chat;
+      }
     });
     builder.addCase(sendMessage.fulfilled, (state, action) => {
       const newMessage = action.payload.message;

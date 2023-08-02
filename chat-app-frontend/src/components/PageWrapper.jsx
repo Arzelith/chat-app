@@ -3,7 +3,7 @@ import { DisplayError, ActionModal } from './';
 import { useSelector, useDispatch } from 'react-redux';
 import { logoutUser } from '../features/userSlice';
 
-const PageWrapper = ({ children, serverError }) => {
+const PageWrapper = ({ children, serverError, disconnect }) => {
   const { sessionOver } = useSelector((storage) => storage.error);
   const dispatch = useDispatch();
   return (
@@ -22,7 +22,10 @@ const PageWrapper = ({ children, serverError }) => {
             open={sessionOver}
             title={'Su sesión ha caducado'}
             variant={'sessionOver'}
-            onClick={() => dispatch(logoutUser())}
+            onClick={() => {
+              dispatch(logoutUser());
+              disconnect();
+            }}
             acceptBtnText={'Volver a login'}
           />
           {children}

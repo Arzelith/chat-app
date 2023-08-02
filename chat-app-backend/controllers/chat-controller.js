@@ -3,6 +3,7 @@ const { asyncHandler } = require('../utils/async-handler');
 const ApiError = require('../errors/api-error');
 
 const getOrCreateOneToOneChat = asyncHandler(async (req, res) => {
+  
   const { userId } = req.body;
   if (!userId) {
     throw new ApiError(400, 'Id de usuario no encontrada');
@@ -10,10 +11,11 @@ const getOrCreateOneToOneChat = asyncHandler(async (req, res) => {
   let chat = await Chat.findOne({
     users: { $all: [req.user._id, userId] },
   })
-    .populate('users', 'displayName email avatar status')
+    .populate('users', 'displayName email avatar status isOnline')
     .populate('latestMessage');
-  if (chat.latestMessage) {
-    if (!chat.latestMessage.readBy.includes(req.user._id)) {
+  
+  if (chat?.latestMessage) {
+    if (!chat?.latestMessage.readBy.includes(req.user._id)) {
       chat.latestMessage.readBy.push(req.user._id);
       await chat.save();
     }
@@ -27,7 +29,7 @@ const getOrCreateOneToOneChat = asyncHandler(async (req, res) => {
     });
     chat = await Chat.findOne({ _id: newChat._id }).populate(
       'users',
-      'displayName email avatar status'
+      'displayName email avatar status isOnline'
     );
     return res.status(200).json({ chat });
   }
@@ -39,7 +41,7 @@ const getAllOneToOneChats = asyncHandler(async (req, res) => {
     throw new ApiError(400, 'Id de usuario no encontrada');
   }
   const chats = await Chat.find({ $and: [{ users: id }, { enabledBy: { $in: [id] } }] })
-    .populate('users', 'displayName email avatar status')
+    .populate('users', 'displayName email avatar status isOnline')
     .populate('latestMessage')
     .sort({ updatedAt: -1 });
   res.status(200).json(chats);

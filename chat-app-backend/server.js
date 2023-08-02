@@ -11,6 +11,10 @@ const chatRoutes = require('./routes/chat-routes');
 const messageRoutes = require('./routes/message-routes');
 const favoriteRoutes = require('./routes/favorite-routes');
 //END ROUTE-IMPORTS
+
+const User = require('./models/user-model');
+const Chat = require('./models/chat-model');
+
 const cookieParser = require('cookie-parser');
 const apiErrorHandler = require('./middlewares/api-error-handler');
 const app = express();
@@ -58,6 +62,57 @@ const startServer = async () => {
       console.log(`Server corriendo en puert:${port}`);
     });
     //SOCKET.IO
+    const io = require('socket.io')(server, {
+      cors: {
+        origin:
+          process.env.NODE_ENV !== 'production'
+            ? ['http://localhost:3000', 'http://127.0.0.1:3000']
+            : [process.env.ORIGIN],
+        credentials: true,
+        methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
+      },
+    });
+    io.on('connection', async (socket) => {
+      let userId;
+
+      const emitForUsers = (arr, emit, toString) => {
+        if (arr.lenght < 1) return;
+        arr.forEach((c) => {
+          c.users.forEach((user) => {
+            let id = toString ? user.toString() : user._id;
+            if (id !== userId) {
+              socket.in(id).emit(emit, userId);
+            }
+          });
+        });
+      };
+
+      const handleConnection = async (emit, userId, online) => {
+        await User.findByIdAndUpdate(userId, { isOnline: online });
+        const chats = await Chat.find({ users: userId });
+        emitForUsers(chats, emit, true);
+      };
+
+      socket.on('setup', async (user) => {
+        socket.join(user._id);
+        socket.emit('connected');
+        userId = user._id;
+        await handleConnection('user connected', userId, '1');
+      });
+
+      socket.on('enter chat', (chat) => {
+        socket.join(chat);
+      });
+
+      socket.on('status changed', (chatList) => {
+        emitForUsers(chatList, 'new user status', false);
+      });
+
+      socket.on('disconnect', async () => {
+        await handleConnection('user disconnected', userId, '0');
+      });
+    });
+
     //END SOCKET.IO
   } catch (error) {
     console.log(error);

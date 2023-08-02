@@ -50,7 +50,11 @@ const ChatList = ({ user }) => {
         <Box key={chatItem._id}>
           {chatItem?.latestMessage?.content && (
             <ListItem divider disableGutters disablePadding>
-              <ListItemButton onClick={() => enterChat(correctUser(chatItem)._id)}>
+              <ListItemButton
+                onClick={() => {
+                  enterChat({ userId: correctUser(chatItem)._id, isCurrentChat: true });
+                }}
+              >
                 <ListItemAvatar>
                   <CustomBadge
                     top={34}
