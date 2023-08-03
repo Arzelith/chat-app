@@ -21,9 +21,9 @@ const createMessage = asyncHandler(async (req, res) => {
     chat: chatId,
     readBy: [req.user._id],
   });
-  message = await message.populate('sender', 'displayName email avatar status');
+  message = await message.populate('sender', 'displayName email avatar status isOnline');
   message = await message.populate('chat');
-  message = await message.populate({ path: 'chat.users', model: 'User', select: '_id' });
+  message = await message.populate({ path: 'chat.users', model: 'User' });
 
   chat.latestMessage = message;
   chat.enabledBy = [...chat.users];
@@ -37,7 +37,7 @@ const getAllMessages = asyncHandler(async (req, res) => {
     throw new ApiError(400, 'Id de chat no encontrada');
   }
   const messages = await Message.find({ chat: chatId })
-    .populate('sender', 'displayName email avatar status')
+    .populate('sender', 'displayName email avatar status isOnline')
     .populate('chat')
     .sort({ updatedAt: -1 });
   // const chat = await Chat.findById(chatId);

@@ -42,6 +42,7 @@ export const sendMessage = createAsyncThunk(
         chatId: values.chatId,
         content: values.content,
       });
+      values.socket.emit('new message', data);
       return data;
     } catch (error) {
       return handleServerError(error, thunkAPI);
@@ -62,6 +63,17 @@ const chatSlice = createSlice({
   reducers: {
     exitCurrentChat: (state) => {
       state.currentChat = {};
+    },
+    setNewMessageRecieved: (state, action) => {
+      const chatId = action.payload.message.chat._id;
+      const newMessage = action.payload.message;
+      state.chatMessages
+        .find((item) => item.chat === chatId)
+        .messages.unshift(newMessage);
+      const reordered = state.chatList.filter((chatItem) => chatItem._id !== chatId);
+      const chat = state.chatList.find((chat) => chat._id === chatId);
+      reordered.unshift(chat);
+      state.chatList = [...reordered];
     },
   },
   extraReducers: (builder) => {
@@ -96,5 +108,5 @@ const chatSlice = createSlice({
     });
   },
 });
-export const { exitCurrentChat } = chatSlice.actions;
+export const { exitCurrentChat, setNewMessageRecieved } = chatSlice.actions;
 export default chatSlice.reducer;

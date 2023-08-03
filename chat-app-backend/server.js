@@ -100,8 +100,19 @@ const startServer = async () => {
         await handleConnection('user connected', userId, '1');
       });
 
-      socket.on('enter chat', (chat) => {
-        socket.join(chat);
+      socket.on('enter chat', (chatId) => {
+        socket.join(chatId);
+        console.log(`user: ${userId} ha entrado a chat: ${chatId}`);
+      });
+
+      socket.on('new message', ({ message }) => {
+        let chat = message.chat;
+        if (!chat.users) return;
+        chat.users.forEach((user) => {
+          if(user._id!==message.sender._id){
+            socket.in(user._id).emit('new message recieved', message)
+          }
+        });
       });
 
       socket.on('status changed', (chatList) => {
