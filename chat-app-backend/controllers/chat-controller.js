@@ -4,43 +4,45 @@ const { asyncHandler } = require('../utils/async-handler');
 const ApiError = require('../errors/api-error');
 
 const getOrCreateOneToOneChat = asyncHandler(async (req, res) => {
-  const { userId, updateLatestMessage } = req.body;
-  if (!userId) {
-    throw new ApiError(400, 'Id de usuario no encontrada');
-  }
-  let chat = await Chat.findOne({
-    users: { $all: [req.user._id, userId] },
-  })
-    .populate('users', 'displayName email avatar status isOnline')
-    .populate('latestMessage');
-
-  const id = chat._id;
-  if (chat?.latestMessage && updateLatestMessage) {
-    if (!chat?.latestMessage.readBy.includes(req.user._id)) {
-      chat.latestMessage.readBy.push(req.user._id);
+  try {
+    const { userId, updateLatestMessage } = req.body;
+    if (!userId) {
+      throw new ApiError(400, 'Id de usuario no encontrada');
     }
-  }
+    let chat = await Chat.findOne({
+      users: { $all: [req.user._id, userId] },
+    })
+      .populate('users', 'displayName email avatar status isOnline')
+      .populate('latestMessage');
 
-  if (chat) {
-    if (updateLatestMessage) {
+    if (chat?.latestMessage && updateLatestMessage) {
+      if (!chat?.latestMessage.readBy.includes(req.user._id)) {
+        chat.latestMessage.readBy.push(req.user._id);
+      }
+    }
+
+    if (chat) {
+      const id = chat._id;
       await Message.updateMany(
         {
           $and: [{ chat: id }, { readBy: { $nin: [req.user._id] } }],
         },
         { $push: { readBy: req.user._id } }
       );
+      return res.status(200).json({ chat });
+      
+    } else {
+      const newChat = await Chat.create({
+        users: [req.user._id, userId],
+      });
+      chat = await Chat.findOne({ _id: newChat._id }).populate(
+        'users',
+        'displayName email avatar status isOnline'
+      );
+      return res.status(200).json({ chat });
     }
-    await Message.updateMany();
-    return res.status(200).json({ chat });
-  } else {
-    const newChat = await Chat.create({
-      users: [req.user._id, userId],
-    });
-    chat = await Chat.findOne({ _id: newChat._id }).populate(
-      'users',
-      'displayName email avatar status isOnline'
-    );
-    return res.status(200).json({ chat });
+  } catch (error) {
+    console.log(error);
   }
 });
 
