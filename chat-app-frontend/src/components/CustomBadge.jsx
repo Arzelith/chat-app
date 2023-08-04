@@ -10,7 +10,7 @@ const CustomBadge = ({ user, top, height, width, children, ...otherProps }) => {
       width: width,
       backgroundColor:
         user.status === '1' && user.isOnline === '1'
-          ? 'green'
+          ? '#29bf60'
           : user.status === '2' && user.isOnline === '1'
           ? 'yellow'
           : user.status === '3' && user.isOnline === '1'

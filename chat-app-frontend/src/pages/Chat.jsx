@@ -23,6 +23,7 @@ import { styled } from '@mui/material/styles';
 import io from 'socket.io-client';
 const IO_ENDPOINT = import.meta.env.VITE_SOCKET_URL;
 let socket;
+let selectedChat;
 
 const PaperItem = styled(Paper)(() => ({
   backgroundColor: '#fff',
@@ -69,24 +70,36 @@ const Chat = () => {
     }
   };
 
-  const getChat = async (userId) => {
+  const getChat = async (userId, updateLatestMessage) => {
     try {
       await dispatch(
-        getOrCreateChat({ axiosPrivate, values: { userId, isCurrentChat: false } })
+        getOrCreateChat({
+          axiosPrivate,
+          values: {
+            userId,
+            isCurrentChat: false,
+            updateLatestMessage: updateLatestMessage,
+          },
+        })
       ).unwrap();
     } catch (error) {
       dispatch(setServerError(error));
     }
   };
 
-  const getChatAndSend = async (userId, message) => {
-    await getChat(userId);
+  const getChatAndSend = async (userId, message, chatId) => {
+    const updateLatestMessage = chatId === selectedChat;
+    await getChat(userId, updateLatestMessage);
     dispatch(setNewMessageRecieved({ message: message }));
   };
 
   useEffect(() => {
     getAvailableChats();
   }, []);
+
+  useEffect(() => {
+    selectedChat = currentChat._id;
+  }, [currentChat]);
 
   useEffect(() => {
     socket = io(IO_ENDPOINT);
@@ -126,7 +139,8 @@ const Chat = () => {
   useEffect(() => {
     const setNewMessage = (message) => {
       const userId = message.sender._id;
-      getChatAndSend(userId, message);
+      const chatId = message.chat._id;
+      getChatAndSend(userId, message, chatId);
     };
     socket.on('new message recieved', setNewMessage);
     return () => {
@@ -155,7 +169,7 @@ const Chat = () => {
               disconnect={() => socket.disconnect()}
               user={user}
             />
-            <ChatList user={user} />
+            <ChatList user={user} currentChat={currentChat} />
           </PaperItem>
         </Box>
         <Box

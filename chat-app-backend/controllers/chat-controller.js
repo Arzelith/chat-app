@@ -4,7 +4,7 @@ const ApiError = require('../errors/api-error');
 
 const getOrCreateOneToOneChat = asyncHandler(async (req, res) => {
   
-  const { userId } = req.body;
+  const { userId, updateLatestMessage } = req.body;
   if (!userId) {
     throw new ApiError(400, 'Id de usuario no encontrada');
   }
@@ -14,7 +14,7 @@ const getOrCreateOneToOneChat = asyncHandler(async (req, res) => {
     .populate('users', 'displayName email avatar status isOnline')
     .populate('latestMessage');
   
-  if (chat?.latestMessage) {
+  if (chat?.latestMessage && updateLatestMessage) {
     if (!chat?.latestMessage.readBy.includes(req.user._id)) {
       chat.latestMessage.readBy.push(req.user._id);
       await chat.save();

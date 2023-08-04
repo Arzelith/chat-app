@@ -10,12 +10,13 @@ import {
   ListItemText,
   ListItemButton,
   Divider,
-  Badge,
   ListItemIcon,
   Box,
 } from '@mui/material';
 
-const ChatList = ({ user }) => {
+import { Announcement } from '@mui/icons-material';
+
+const ChatList = ({ user, currentChat }) => {
   const { chatList } = useSelector((storage) => storage.chat);
   const axiosPrivate = useAxiosPrivate();
   const dispatch = useDispatch();
@@ -52,7 +53,11 @@ const ChatList = ({ user }) => {
             <ListItem divider disableGutters disablePadding>
               <ListItemButton
                 onClick={() => {
-                  enterChat({ userId: correctUser(chatItem)._id, isCurrentChat: true });
+                  enterChat({
+                    userId: correctUser(chatItem)._id,
+                    isCurrentChat: true,
+                    updateLatestMessage: true,
+                  });
                 }}
               >
                 <ListItemAvatar>
@@ -76,9 +81,12 @@ const ChatList = ({ user }) => {
                 >
                   {correctUser(chatItem).displayName}
                 </ListItemText>
-                <ListItemIcon>
-                  <Badge badgeContent={'nuevos!'} color='primary' />
-                </ListItemIcon>
+                {!chatItem.latestMessage.readBy.includes(user._id) &&
+                  currentChat._id !== chatItem._id && (
+                    <ListItemIcon>
+                      <Announcement sx={{ fill: '#2eb860' }} fontSize='large' />
+                    </ListItemIcon>
+                  )}
               </ListItemButton>
             </ListItem>
           )}

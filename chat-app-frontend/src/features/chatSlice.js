@@ -26,7 +26,10 @@ export const getOrCreateChat = createAsyncThunk(
   'chat/getOrCreateChat',
   async ({ axiosPrivate, values }, thunkAPI) => {
     try {
-      const chatResponse = await axiosPrivate.post('/chat', { userId: values.userId });
+      const chatResponse = await axiosPrivate.post('/chat', {
+        userId: values.userId,
+        updateLatestMessage: values.updateLatestMessage,
+      });
       return { chat: chatResponse.data, isCurrentChat: values.isCurrentChat };
     } catch (error) {
       return handleServerError(error, thunkAPI);

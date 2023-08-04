@@ -68,7 +68,13 @@ const UserList = ({
             {rightList().map((userItem) => (
               <ListItem key={userItem._id} divider disablePadding>
                 <ListItemButton
-                  onClick={() => enterChat({ userId: userItem._id, isCurrentChat: true })}
+                  onClick={() =>
+                    enterChat({
+                      userId: userItem._id,
+                      isCurrentChat: true,
+                      updateLatestMessage: true,
+                    })
+                  }
                 >
                   <ListItemAvatar>
                     <UserAvatar
