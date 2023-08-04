@@ -62,7 +62,7 @@ const Chat = () => {
           })
         ).unwrap();
         const targetUser = currentChat.users.find((u) => u._id !== user._id);
-        getChat(targetUser._id);
+        getChat(targetUser._id, true);
         setNewMessage('');
       } catch (error) {
         dispatch(setServerError(error));

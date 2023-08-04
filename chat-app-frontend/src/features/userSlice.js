@@ -3,6 +3,7 @@ import { axiosPublic } from '../api/axios';
 import handleServerError from '../utils/serverErrorHandler';
 import { clearServerError, setSessionOver } from './serverErrorSlice';
 import { setAccessAndUserData, clearAccessAndUserData } from '../utils/accessDataHandler';
+import { exitCurrentChat } from './chatSlice';
 
 export const authUser = createAsyncThunk('user/authUser', async (values, thunkAPI) => {
   try {
@@ -20,9 +21,12 @@ export const logoutUser = createAsyncThunk(
       await axiosPublic.get('/logout');
       thunkAPI.dispatch(clearServerError());
       thunkAPI.dispatch(setSessionOver(false));
+      thunkAPI.dispatch(exitCurrentChat());
     } catch (error) {
       thunkAPI.dispatch(clearServerError());
       thunkAPI.dispatch(setSessionOver(false));
+      thunkAPI.dispatch(exitCurrentChat());
+
       return handleServerError(error, thunkAPI);
     }
   }
@@ -76,7 +80,9 @@ export const updateUserStatus = createAsyncThunk(
   'user/updateUserStatus',
   async ({ axiosPrivate, values }, thunkAPI) => {
     try {
-      const { data } = await axiosPrivate.patch(`/users/current-user/?status=${values.status}`);
+      const { data } = await axiosPrivate.patch(
+        `/users/current-user/?status=${values.status}`
+      );
       return data;
     } catch (error) {
       return handleServerError(error, thunkAPI);

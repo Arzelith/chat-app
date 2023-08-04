@@ -40,11 +40,6 @@ const getAllMessages = asyncHandler(async (req, res) => {
     .populate('sender', 'displayName email avatar status isOnline')
     .populate('chat')
     .sort({ updatedAt: -1 });
-  // const chat = await Chat.findById(chatId);
-  // if (!chat.enabledBy.includes(req.user._id.toString())) {
-  //   chat.enabledBy.push(req.user._id);
-  //   await chat.save();
-  // }
   res.status(200).json(messages);
 });
 
