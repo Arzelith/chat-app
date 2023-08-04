@@ -75,13 +75,17 @@ const startServer = async () => {
     io.on('connection', async (socket) => {
       let userId;
 
-      const emitForUsers = (arr, emit, toString) => {
+      const emitForUsers = (arr, emit, toString, payload) => {
         if (arr.lenght < 1) return;
         arr.forEach((c) => {
           c.users.forEach((user) => {
             let id = toString ? user.toString() : user._id;
             if (id !== userId) {
-              socket.in(id).emit(emit, userId);
+              if (!payload) {
+                socket.in(id).emit(emit, userId);
+              } else {
+                socket.in(id).emit(emit, payload);
+              }
             }
           });
         });
@@ -100,23 +104,22 @@ const startServer = async () => {
         await handleConnection('user connected', userId, '1');
       });
 
-      socket.on('enter chat', (chatId) => {
-        socket.join(chatId);
-        console.log(`user: ${userId} ha entrado a chat: ${chatId}`);
-      });
-
       socket.on('new message', ({ message }) => {
         let chat = message.chat;
         if (!chat.users) return;
         chat.users.forEach((user) => {
-          if(user._id!==message.sender._id){
-            socket.in(user._id).emit('new message recieved', message)
+          if (user._id !== message.sender._id) {
+            socket.in(user._id).emit('new message recieved', message);
           }
         });
       });
 
       socket.on('status changed', (chatList) => {
         emitForUsers(chatList, 'new user status', false);
+      });
+
+      socket.on('user update', ({ chatList, user }) => {
+        emitForUsers(chatList, 'user updated', false, user);
       });
 
       socket.on('disconnect', async () => {

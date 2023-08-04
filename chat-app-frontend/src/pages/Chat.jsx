@@ -7,6 +7,7 @@ import {
   sendMessage,
   getOrCreateChat,
   setNewMessageRecieved,
+  setUpdatedChatUser,
 } from '../features/chatSlice';
 import {
   PageWrapper,
@@ -113,13 +114,18 @@ const Chat = () => {
     const setStatus = (userId) => {
       getChat(userId);
     };
+    const updateChatUser = (user) => {
+      dispatch(setUpdatedChatUser(user));
+    };
     socket.on('user disconnected', setStatus);
     socket.on('user connected', setStatus);
     socket.on('new user status', setStatus);
+    socket.on('user updated', updateChatUser);
     return () => {
       socket.off('user disconnected', setStatus);
       socket.off('user connected', setStatus);
       socket.off('new user status', setStatus);
+      socket.off('user updated', updateChatUser);
     };
   }, []);
 
@@ -130,11 +136,10 @@ const Chat = () => {
   }, [user.status]);
 
   useEffect(() => {
-    if (currentChat._id) {
-      const chatId = currentChat._id;
-      socket.emit('enter chat', chatId);
+    if (user) {
+      socket.emit('user update', { chatList, user });
     }
-  }, [currentChat._id]);
+  }, [user.displayName, user.avatar, user.email]);
 
   useEffect(() => {
     const setNewMessage = (message) => {

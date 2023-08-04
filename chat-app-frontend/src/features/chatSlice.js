@@ -56,7 +56,7 @@ export const sendMessage = createAsyncThunk(
 const initialState = {
   chatList: [],
   currentChat: {},
-  currentChatMessages: [],
+  // currentChatMessages: [],
   chatMessages: [],
 };
 
@@ -77,6 +77,33 @@ const chatSlice = createSlice({
       const chat = state.chatList.find((chat) => chat._id === chatId);
       reordered.unshift(chat);
       state.chatList = [...reordered];
+    },
+    setUpdatedChatUser: (state, action) => {
+      const updatedUser = action.payload;
+      const chatIndex = state.chatList.findIndex((c) =>
+        c.users.find((u) => u._id === updatedUser._id)
+      );
+      if (chatIndex !== -1) {
+        const userIndex = state.chatList[chatIndex].users.findIndex(
+          (u) => u._id === updatedUser._id
+        );
+        if (userIndex !== -1) {
+          state.chatList[chatIndex].users[userIndex] = updatedUser;
+          if (state.currentChat._id === state.chatList[chatIndex]._id) {
+            state.currentChat.users[userIndex] = updatedUser;
+          }
+          const chatMessageIndex = state.chatMessages.findIndex(
+            (cm) => cm.chat === state.chatList[chatIndex]._id
+          );
+          if (chatMessageIndex !== -1) {
+            state.chatMessages[chatMessageIndex].messages.forEach((m) => {
+              if (m.sender._id === updatedUser._id) {
+                m.sender = updatedUser;
+              }
+            });
+          }
+        }
+      }
     },
   },
   extraReducers: (builder) => {
@@ -111,5 +138,6 @@ const chatSlice = createSlice({
     });
   },
 });
-export const { exitCurrentChat, setNewMessageRecieved } = chatSlice.actions;
+export const { exitCurrentChat, setNewMessageRecieved, setUpdatedChatUser } =
+  chatSlice.actions;
 export default chatSlice.reducer;
