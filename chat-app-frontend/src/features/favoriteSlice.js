@@ -49,8 +49,7 @@ const favoriteSlice = createSlice({
     filterFavorites: (state, action) => {
       const filtered = state.favoriteList.filter(
         (item) =>
-          item.displayName.toLowerCase().includes(action.payload) ||
-          item.email.toLowerCase().includes(action.payload)
+          item.displayName.toLowerCase().includes(action.payload)
       );
       state.filteredFavoriteList = [...filtered];
     },

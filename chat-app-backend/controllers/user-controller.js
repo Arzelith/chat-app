@@ -37,17 +37,16 @@ const findUser = asyncHandler(async (req, res) => {
   if (!search) {
     return res.status(200).json([]);
   }
+
   const users = await User.find({
     $and: [
       {
-        $or: [
-          { displayName: { $regex: search, $options: 'i' } },
-          { email: { $regex: search, $options: 'i' } },
-        ],
+        displayName: { $regex: search, $options: 'i' },
       },
       { _id: { $ne: req.user._id } },
     ],
   });
+
   res.status(200).json(users);
 });
 

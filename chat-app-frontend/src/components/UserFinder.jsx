@@ -73,7 +73,7 @@ const UserFinder = ({ openUserFinderModal, setOpenUserFinderModal }) => {
   return (
     <ActionModal title={'Inicia un chat'} variant={'finder'} open={openUserFinderModal}>
       <TextField
-        label='Nombre de usuario o email...'
+        label='Nombre de usuario...'
         fullWidth
         name='userName'
         onChange={handleChange}

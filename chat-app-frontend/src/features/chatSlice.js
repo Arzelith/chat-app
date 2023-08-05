@@ -56,7 +56,6 @@ export const sendMessage = createAsyncThunk(
 const initialState = {
   chatList: [],
   currentChat: {},
-  // currentChatMessages: [],
   chatMessages: [],
 };
 
