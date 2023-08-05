@@ -44,12 +44,12 @@ export const findUser = createAsyncThunk(
   }
 );
 
-export const updateUserProfile = createAsyncThunk(
-  'user/updateUserProfile',
+export const updateUserEmail = createAsyncThunk(
+  'user/updateUserEmail',
   async ({ axiosPrivate, values }, thunkAPI) => {
     try {
       const { data } = await axiosPrivate.patch(
-        '/users/current-user/profile-info',
+        '/users/current-user/email',
         values
       );
       return data;
@@ -123,7 +123,7 @@ const userSlice = createSlice({
         state.userList = [...action.payload];
       }
     });
-    builder.addCase(updateUserProfile.fulfilled, (state, action) => {
+    builder.addCase(updateUserEmail.fulfilled, (state, action) => {
       const { user } = action.payload;
       setAccessAndUserData(state, null, user, localStorage);
     });

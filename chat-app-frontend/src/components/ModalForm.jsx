@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateUserProfile, updateUserAvatar } from '../features/userSlice';
+import { updateUserEmail, updateUserAvatar } from '../features/userSlice';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import handleServerError from '../utils/serverErrorHandler';
 import { setServerError } from '../features/serverErrorSlice';
@@ -12,8 +12,7 @@ import { Formik, Form } from 'formik';
 import { Box } from '@mui/material';
 
 const inputs = [
-  { name: 'displayName', label: 'Nombre de usuario', formType: 'perfil' },
-  { name: 'email', label: 'Email', formType: 'perfil' },
+  { name: 'email', label: 'Email', formType: 'email' },
   { name: 'password', label: 'Password', type: 'password', formType: 'password' },
   {
     name: 'confirmPassword',
@@ -30,8 +29,8 @@ const ModalForm = ({ setOpenFormModal, openFormModal }) => {
   const dispatch = useDispatch();
 
   const initialValues = () => {
-    if (openFormModal === 'perfil') {
-      return { displayName: user.displayName, email: user.email };
+    if (openFormModal === 'email') {
+      return {  email: user.email };
     }
     if (openFormModal === 'password') {
       return { password: '', confirmPassword: '' };
@@ -62,7 +61,7 @@ const ModalForm = ({ setOpenFormModal, openFormModal }) => {
       <Formik
         initialValues={initialValues()}
         validationSchema={
-          openFormModal === 'perfil'
+          openFormModal === 'email'
             ? profileValidation
             : openFormModal === 'password'
             ? passwordValidation
@@ -70,8 +69,8 @@ const ModalForm = ({ setOpenFormModal, openFormModal }) => {
         }
         onSubmit={async (values, actions) => {
           try {
-            if (openFormModal === 'perfil') {
-              await dispatch(updateUserProfile({ axiosPrivate, values })).unwrap();
+            if (openFormModal === 'email') {
+              await dispatch(updateUserEmail({ axiosPrivate, values })).unwrap();
             }
             if (openFormModal === 'password') {
               await axiosPrivate.patch('/users/current-user/password', values);

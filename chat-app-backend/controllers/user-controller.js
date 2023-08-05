@@ -51,13 +51,13 @@ const findUser = asyncHandler(async (req, res) => {
   res.status(200).json(users);
 });
 
-const updateProfileInfo = asyncHandler(async (req, res) => {
+const updateEmail = asyncHandler(async (req, res) => {
   const id = req.user._id;
-  const { displayName, email } = req.body;
+  const { email } = req.body;
   if (!id) {
     throw new ApiError(400, 'Id de usuario no encontrada');
   }
-  if (!displayName || !email) {
+  if (!email) {
     throw new ApiError(400, 'Todos los campos son requeridos');
   }
   const user = await User.findById(id);
@@ -67,13 +67,7 @@ const updateProfileInfo = asyncHandler(async (req, res) => {
       'Ya existe un usuario registrado con este email'
     );
   }
-  if (user.displayName.toLowerCase() !== displayName.toLowerCase()) {
-    await checkUnique(
-      { displayName: { $regex: new RegExp('^'+ displayName + '$', "i") } },
-      'Este nombre de usuario ya se encuentra en uso'
-    );
-  }
-  user.displayName = displayName;
+
   user.email = email.toLowerCase();
   await user.save();
   res.status(200).json({ user });
@@ -148,7 +142,7 @@ const checkUnique = async (condition, message) => {
 module.exports = {
   registerUser,
   updatePassword,
-  updateProfileInfo,
+  updateEmail,
   updateProfileAvatar,
   findUser,
   updateUserStatus,

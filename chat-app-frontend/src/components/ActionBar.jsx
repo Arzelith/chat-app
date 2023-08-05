@@ -74,8 +74,8 @@ const ActionBar = ({
   ];
 
   const verticalMenuItems = [
-    { text: 'Configurar perfil', action: () => setOpenFormModal('perfil') },
-    { text: 'Cambiar contraseña', action: () => setOpenFormModal('password') },
+    { text: 'Actualizar email', action: () => setOpenFormModal('email') },
+    { text: 'Actualizar contraseña', action: () => setOpenFormModal('password') },
     {
       text: 'Cerrar sesión',
       action: () => {
