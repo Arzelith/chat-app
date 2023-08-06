@@ -48,10 +48,7 @@ export const updateUserEmail = createAsyncThunk(
   'user/updateUserEmail',
   async ({ axiosPrivate, values }, thunkAPI) => {
     try {
-      const { data } = await axiosPrivate.patch(
-        '/users/current-user/email',
-        values
-      );
+      const { data } = await axiosPrivate.patch('/users/current-user/email', values);
       return data;
     } catch (error) {
       return handleServerError(error, thunkAPI);
@@ -64,11 +61,14 @@ export const updateUserAvatar = createAsyncThunk(
   async ({ axiosPrivate, values }, thunkAPI) => {
     const action = values.action;
     const avatar64 = values?.avatar64;
+    const chatList = values.chatList;
     try {
       const { data } = await axiosPrivate.patch(
         `/users/current-user/avatar/${action}`,
         avatar64 && { avatar64 }
       );
+      const user = data;
+      values.socket.emit('user update', { chatList, user });
       return data;
     } catch (error) {
       return handleServerError(error, thunkAPI);
@@ -83,6 +83,8 @@ export const updateUserStatus = createAsyncThunk(
       const { data } = await axiosPrivate.patch(
         `/users/current-user/?status=${values.status}`
       );
+      const chatList = values.chatList;
+      values.socket.emit('status changed', chatList);
       return data;
     } catch (error) {
       return handleServerError(error, thunkAPI);

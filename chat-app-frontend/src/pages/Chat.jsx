@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { v4 as uuidv4 } from 'uuid';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import { setServerError } from '../features/serverErrorSlice';
 import {
@@ -8,6 +9,7 @@ import {
   getOrCreateChat,
   setNewMessageRecieved,
   setUpdatedChatUser,
+  setPendingMessage,
 } from '../features/chatSlice';
 import {
   PageWrapper,
@@ -55,16 +57,26 @@ const Chat = () => {
   const sendNewMessage = async (e) => {
     e.preventDefault();
     if (newMessage.trim().length > 0) {
+      dispatch(
+        setPendingMessage({
+          chatId: currentChat._id,
+          content: newMessage,
+          sender: user,
+          readBy: [user._id],
+          _id:uuidv4()
+        })
+      );
+      const message = newMessage;
+      setNewMessage('');
       try {
         await dispatch(
           sendMessage({
             axiosPrivate,
-            values: { chatId: currentChat._id, content: newMessage, socket },
+            values: { chatId: currentChat._id, content: message, socket },
           })
         ).unwrap();
         const targetUser = currentChat.users.find((u) => u._id !== user._id);
         getChat(targetUser._id, true);
-        setNewMessage('');
       } catch (error) {
         dispatch(setServerError(error));
       }
@@ -117,45 +129,34 @@ const Chat = () => {
     const updateChatUser = (user) => {
       dispatch(setUpdatedChatUser(user));
     };
-    socket.on('user disconnected', setStatus);
-    socket.on('user connected', setStatus);
-    socket.on('new user status', setStatus);
-    socket.on('user updated', updateChatUser);
-    return () => {
-      socket.off('user disconnected', setStatus);
-      socket.off('user connected', setStatus);
-      socket.off('new user status', setStatus);
-      socket.off('user updated', updateChatUser);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (user) {
-      socket.emit('status changed', chatList);
-    }
-  }, [user.status]);
-
-  useEffect(() => {
-    if (user) {
-      socket.emit('user update', { chatList, user });
-    }
-  }, [user.displayName, user.avatar, user.email]);
-
-  useEffect(() => {
     const setNewMessage = (message) => {
       const userId = message.sender._id;
       const chatId = message.chat._id;
       getChatAndSend(userId, message, chatId);
     };
+
+    socket.on('user disconnected', setStatus);
+    socket.on('user connected', setStatus);
+    socket.on('new user status', setStatus);
+    socket.on('user updated', updateChatUser);
     socket.on('new message recieved', setNewMessage);
     return () => {
+      socket.off('user disconnected', setStatus);
+      socket.off('user connected', setStatus);
+      socket.off('new user status', setStatus);
+      socket.off('user updated', updateChatUser);
       socket.off('new message recieved', setNewMessage);
     };
   }, []);
 
   return (
     <PageWrapper serverError={serverError} disconnect={() => socket.disconnect()}>
-      <ModalForm setOpenFormModal={setOpenFormModal} openFormModal={openFormModal} />
+      <ModalForm
+        setOpenFormModal={setOpenFormModal}
+        openFormModal={openFormModal}
+        socket={socket}
+        chatList={chatList}
+      />
       <UserFinder
         openUserFinderModal={openUserFinderModal}
         setOpenUserFinderModal={setOpenUserFinderModal}
@@ -173,6 +174,8 @@ const Chat = () => {
               setOpenUserFinderModal={setOpenUserFinderModal}
               disconnect={() => socket.disconnect()}
               user={user}
+              socket={socket}
+              chatList={chatList}
             />
             <ChatList user={user} currentChat={currentChat} />
           </PaperItem>

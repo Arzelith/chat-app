@@ -22,7 +22,7 @@ const inputs = [
   },
 ];
 
-const ModalForm = ({ setOpenFormModal, openFormModal }) => {
+const ModalForm = ({ setOpenFormModal, openFormModal, socket, chatList }) => {
   const { user } = useSelector((storage) => storage.user);
   const [openSuccessModal, setOpenSuccessModal] = useState(false);
   const axiosPrivate = useAxiosPrivate();
@@ -30,7 +30,7 @@ const ModalForm = ({ setOpenFormModal, openFormModal }) => {
 
   const initialValues = () => {
     if (openFormModal === 'email') {
-      return {  email: user.email };
+      return { email: user.email };
     }
     if (openFormModal === 'password') {
       return { password: '', confirmPassword: '' };
@@ -78,6 +78,8 @@ const ModalForm = ({ setOpenFormModal, openFormModal }) => {
             if (openFormModal === 'avatar') {
               delete values.avatar;
               values.action = 'replace';
+              values.socket = socket;
+              values.chatList = chatList;
               await dispatch(updateUserAvatar({ axiosPrivate, values })).unwrap();
             }
             setOpenSuccessModal(true);

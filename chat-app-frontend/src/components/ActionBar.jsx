@@ -28,6 +28,8 @@ const ActionBar = ({
   setOpenUserFinderModal,
   user,
   disconnect,
+  socket,
+  chatList,
 }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [open, setOpen] = useState('');
@@ -50,7 +52,10 @@ const ActionBar = ({
       action: async () => {
         try {
           await dispatch(
-            updateUserAvatar({ axiosPrivate, values: { action: 'remove' } })
+            updateUserAvatar({
+              axiosPrivate,
+              values: { action: 'remove', socket, chatList },
+            })
           ).unwrap();
         } catch (error) {
           dispatch(setServerError(error));
@@ -61,7 +66,9 @@ const ActionBar = ({
 
   const setStatus = async (status) => {
     try {
-      await dispatch(updateUserStatus({ axiosPrivate, values: { status } })).unwrap();
+      await dispatch(
+        updateUserStatus({ axiosPrivate, values: { status, socket, chatList } })
+      ).unwrap();
     } catch (error) {
       dispatch(setServerError(error));
     }

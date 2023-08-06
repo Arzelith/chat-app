@@ -66,6 +66,11 @@ const chatSlice = createSlice({
     exitCurrentChat: (state) => {
       state.currentChat = {};
     },
+    setPendingMessage: (state, action) => {
+      state.chatMessages
+        .find((item) => item.chat === action.payload.chatId)
+        .messages.unshift(action.payload);
+    },
     setNewMessageRecieved: (state, action) => {
       const chatId = action.payload.message.chat._id;
       const newMessage = action.payload.message;
@@ -78,7 +83,7 @@ const chatSlice = createSlice({
       state.chatList = [...reordered];
     },
     setUpdatedChatUser: (state, action) => {
-      const updatedUser = action.payload;
+      const updatedUser = action.payload.user;
       const chatIndex = state.chatList.findIndex((c) =>
         c.users.find((u) => u._id === updatedUser._id)
       );
@@ -131,12 +136,14 @@ const chatSlice = createSlice({
     builder.addCase(sendMessage.fulfilled, (state, action) => {
       const newMessage = action.payload.message;
       const chatId = action.payload.message.chat._id;
-      state.chatMessages
-        .find((item) => item.chat === chatId)
-        .messages.unshift(newMessage);
+      state.chatMessages.find((item) => item.chat === chatId).messages[0] = newMessage;
     });
   },
 });
-export const { exitCurrentChat, setNewMessageRecieved, setUpdatedChatUser } =
-  chatSlice.actions;
+export const {
+  exitCurrentChat,
+  setNewMessageRecieved,
+  setUpdatedChatUser,
+  setPendingMessage,
+} = chatSlice.actions;
 export default chatSlice.reducer;
