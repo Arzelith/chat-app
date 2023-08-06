@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { MessageBuble } from './';
 import { Box, TextField, Button, List } from '@mui/material';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
 const ActiveChat = ({
   user,
@@ -10,23 +11,56 @@ const ActiveChat = ({
   sendNewMessage,
   currentChat,
 }) => {
+  const [showBack, setShowBack] = useState(false);
+  const bottomEl = useRef(null);
+  const listInnerRef = useRef(null);
+  const scrollToBottom = (behavior) => {
+    bottomEl?.current?.scrollIntoView({ behavior: behavior });
+  };
+
   useEffect(() => {
     if (currentChat._id) {
+      scrollToBottom('instant');
       setNewMessage('');
     }
   }, [currentChat._id]);
+
+  const onScroll = () => {
+    if (listInnerRef.current) {
+      const { scrollTop, scrollHeight } = listInnerRef.current;
+      const isNearBottom = scrollHeight - scrollTop <= scrollHeight;
+      if (!isNearBottom) {
+        setShowBack(true);
+      } else {
+        setShowBack(false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    const listInnerElement = listInnerRef.current;
+    if (listInnerElement) {
+      listInnerElement.addEventListener('scroll', onScroll);
+      return () => {
+        listInnerElement.removeEventListener('scroll', onScroll);
+      };
+    }
+  }, []);
+
   return (
     <div className='text-box'>
       <List
+        ref={listInnerRef}
         sx={{
           display: 'flex',
           flexDirection: 'column-reverse',
           height: '100%',
-          pl: '10%',
-          pr: '10%',
+          pl: { xl: '15%', sm: '10%', xs: '5%' },
+          pr: { xl: '15%', sm: '10%', xs: '5%' },
         }}
         className='text-box'
       >
+        <div ref={bottomEl}></div>
         {chatMessages?.messages.map((messageItem) => (
           <Box
             key={messageItem._id}
@@ -37,6 +71,25 @@ const ActiveChat = ({
           </Box>
         ))}
       </List>
+      {showBack && (
+        <Button
+          variant='contained'
+          sx={{
+            position: 'absolute',
+            bottom: 120,
+            right: 40,
+          }}
+          style={{
+            maxWidth: '40px',
+            maxHeight: '40px',
+            minWidth: '40px',
+            minHeight: '40px',
+          }}
+          onClick={() => scrollToBottom('instant')}
+        >
+          <ArrowDownwardIcon />
+        </Button>
+      )}
       <Box
         component={'form'}
         position={'absolute'}

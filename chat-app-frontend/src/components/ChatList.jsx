@@ -9,9 +9,9 @@ import {
   ListItemAvatar,
   ListItemText,
   ListItemButton,
-  Divider,
   ListItemIcon,
   Box,
+  Typography,
 } from '@mui/material';
 
 import { Announcement } from '@mui/icons-material';
@@ -45,8 +45,7 @@ const ChatList = ({ user, currentChat }) => {
   };
 
   return (
-    <List className='chat-list'>
-      <Divider />
+    <List className='chat-list' sx={{ pt: 0 }}>
       {chatList.map((chatItem) => (
         <Box key={chatItem._id}>
           {chatItem?.latestMessage?.content && (
@@ -76,11 +75,17 @@ const ChatList = ({ user, currentChat }) => {
                   </CustomBadge>
                 </ListItemAvatar>
                 <ListItemText
-                  secondary={latestMessageText(chatItem)}
-                  sx={{ fontWeight: 700 }}
-                >
-                  {correctUser(chatItem).displayName}
-                </ListItemText>
+                  disableTypography
+                  secondary={
+                    <Typography variant='body2' >{latestMessageText(chatItem)}</Typography>
+                  }
+                  primary={
+                    <Typography variant='body1' fontWeight={'bold'} color={'primary'}>
+                      {correctUser(chatItem).displayName}
+                    </Typography>
+                  }
+                />
+
                 {!chatItem.latestMessage.readBy.includes(user._id) &&
                   currentChat._id !== chatItem._id && (
                     <ListItemIcon>

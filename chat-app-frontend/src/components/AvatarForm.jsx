@@ -32,7 +32,7 @@ const AvatarForm = ({ isSubmitting, user, setFieldValue }) => {
     <>
       <Avatar
         src={preview}
-        sx={{ height: 150, width: 150, ml: 'auto', mr: 'auto', mb: 1 }}
+        sx={{ height: 150, width: 150, ml: 'auto', mr: 'auto', mb: 1, mt:1 }}
       />
       <FormInput
         type='file'

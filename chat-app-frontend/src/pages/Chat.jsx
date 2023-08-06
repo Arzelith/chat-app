@@ -164,7 +164,7 @@ const Chat = () => {
       <Box display={'flex'} flexDirection={'row'} width={'100%'}>
         <Box
           mr={{ xs: 0, md: 2 }}
-          width={{ xs: '100%', md: 400 }}
+          width={{ xs: '100%', md: '600px', }}
           display={{ xs: currentChat._id ? 'none' : 'block', md: 'block' }}
         >
           <PaperItem variant='outlined'>
@@ -181,7 +181,7 @@ const Chat = () => {
           </PaperItem>
         </Box>
         <Box
-          flexGrow={1}
+          width={'100%'}
           display={{
             xs: currentChat._id ? 'block' : 'none',
             md: 'block',

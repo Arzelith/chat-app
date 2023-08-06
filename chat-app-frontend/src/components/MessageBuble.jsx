@@ -8,6 +8,7 @@ const MessageBuble = ({ user, messageItem }) => {
       flexDirection={user._id !== messageItem.sender._id ? 'row' : 'row-reverse'}
       mb={2}
       mt={1}
+      maxWidth={'60%'}
     >
       {user._id !== messageItem.sender._id && (
         <UserAvatar
@@ -20,17 +21,18 @@ const MessageBuble = ({ user, messageItem }) => {
       <Box
         component={Paper}
         variant='outlined'
-        pt={1}
-        pb={1}
-        pr={2}
-        pl={2}
+        pt={0.5}
+        pb={0.5}
+        pr={1}
+        pl={1}
         ml={0.5}
         mr={0.5}
         display={'flex'}
+        bgcolor={user._id === messageItem.sender._id && '#D7FAD1'}
         flexDirection={'column'}
       >
         {user._id !== messageItem.sender._id && (
-          <Typography variant='body2' fontWeight={'bold'} mb={0.2}>
+          <Typography variant='body2' fontWeight={'bold'} color={'primary'}>
             {messageItem.sender.displayName + ':'}
           </Typography>
         )}
@@ -38,7 +40,7 @@ const MessageBuble = ({ user, messageItem }) => {
         <Typography
           variant='body2'
           sx={{ wordBreak: 'break-word' }}
-          textAlign={user._id !== messageItem.sender._id ? 'left' : 'right'}
+          pt={0.3}
           width={'100%'}
         >
           {messageItem.content}
