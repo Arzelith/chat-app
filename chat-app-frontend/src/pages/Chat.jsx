@@ -19,8 +19,9 @@ import {
   ModalForm,
   UserFinder,
   ChatList,
+  PaperWrapper,
 } from '../components';
-import { Paper, Box } from '@mui/material';
+import { Paper, Box, Typography, CircularProgress } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 import io from 'socket.io-client';
@@ -35,7 +36,9 @@ const PaperItem = styled(Paper)(() => ({
 
 const Chat = () => {
   const { user } = useSelector((storage) => storage.user);
-  const { currentChat, chatMessages, chatList } = useSelector((storage) => storage.chat);
+  const { currentChat, chatMessages, chatList, isChatLoading } = useSelector(
+    (storage) => storage.chat
+  );
   const { serverError } = useSelector((storage) => storage.error);
   const [openFormModal, setOpenFormModal] = useState('');
   const [openUserFinderModal, setOpenUserFinderModal] = useState(false);
@@ -63,7 +66,7 @@ const Chat = () => {
           content: newMessage,
           sender: user,
           readBy: [user._id],
-          _id:uuidv4()
+          _id: uuidv4(),
         })
       );
       const message = newMessage;
@@ -151,68 +154,86 @@ const Chat = () => {
 
   return (
     <PageWrapper serverError={serverError} disconnect={() => socket.disconnect()}>
-      <ModalForm
-        setOpenFormModal={setOpenFormModal}
-        openFormModal={openFormModal}
-        socket={socket}
-        chatList={chatList}
-      />
-      <UserFinder
-        openUserFinderModal={openUserFinderModal}
-        setOpenUserFinderModal={setOpenUserFinderModal}
-      />
-      <Box display={'flex'} flexDirection={'row'} width={'100%'}>
-        <Box
-          mr={{ xs: 0, md: 2 }}
-          width={{ xs: '100%', md: '600px', }}
-          display={{ xs: currentChat._id ? 'none' : 'block', md: 'block' }}
-        >
-          <PaperItem variant='outlined'>
-            <ActionBar
-              variant={'left'}
-              setOpenFormModal={setOpenFormModal}
-              setOpenUserFinderModal={setOpenUserFinderModal}
-              disconnect={() => socket.disconnect()}
-              user={user}
-              socket={socket}
-              chatList={chatList}
-            />
-            <ChatList user={user} currentChat={currentChat} />
-          </PaperItem>
-        </Box>
-        <Box
-          width={'100%'}
-          display={{
-            xs: currentChat._id ? 'block' : 'none',
-            md: 'block',
-            position: 'relative',
-          }}
-        >
-          <PaperItem variant='outlined'>
-            {currentChat._id && (
-              <>
+      {isChatLoading ? (
+        <PaperWrapper>
+          <CircularProgress size={60} sx={{ ml: 'auto', mr: 'auto', mt: 1 }} />
+          <Typography
+            variant='body2'
+            fontWeight={'bold'}
+            ml={'auto'}
+            mr={'auto'}
+            mt={2}
+            color={'primary'}
+          >
+            cargando chats...
+          </Typography>
+        </PaperWrapper>
+      ) : (
+        <>
+          <ModalForm
+            setOpenFormModal={setOpenFormModal}
+            openFormModal={openFormModal}
+            socket={socket}
+            chatList={chatList}
+          />
+          <UserFinder
+            openUserFinderModal={openUserFinderModal}
+            setOpenUserFinderModal={setOpenUserFinderModal}
+          />
+          <Box display={'flex'} flexDirection={'row'} width={'100%'}>
+            <Box
+              mr={{ xs: 0, md: 2 }}
+              width={{ xs: '100%', md: '600px' }}
+              display={{ xs: currentChat._id ? 'none' : 'block', md: 'block' }}
+            >
+              <PaperItem variant='outlined'>
                 <ActionBar
-                  variant={'right'}
-                  user={currentChat.users.find((item) => item._id !== user._id)}
-                />
-                <ActiveChat
-                  chatMessages={chatMessages.find(
-                    (item) => item.chat === currentChat._id
-                  )}
+                  variant={'left'}
+                  setOpenFormModal={setOpenFormModal}
+                  setOpenUserFinderModal={setOpenUserFinderModal}
+                  disconnect={() => socket.disconnect()}
                   user={user}
-                  newMessage={newMessage}
-                  setNewMessage={setNewMessage}
-                  sendNewMessage={sendNewMessage}
-                  currentChat={currentChat}
+                  socket={socket}
+                  chatList={chatList}
                 />
-              </>
-            )}
-            {!currentChat._id && (
-              <Welcome setOpenUserFinderModal={setOpenUserFinderModal} />
-            )}
-          </PaperItem>
-        </Box>
-      </Box>
+                <ChatList user={user} currentChat={currentChat} />
+              </PaperItem>
+            </Box>
+            <Box
+              width={'100%'}
+              display={{
+                xs: currentChat._id ? 'block' : 'none',
+                md: 'block',
+                position: 'relative',
+              }}
+            >
+              <PaperItem variant='outlined'>
+                {currentChat._id && (
+                  <>
+                    <ActionBar
+                      variant={'right'}
+                      user={currentChat.users.find((item) => item._id !== user._id)}
+                    />
+                    <ActiveChat
+                      chatMessages={chatMessages.find(
+                        (item) => item.chat === currentChat._id
+                      )}
+                      user={user}
+                      newMessage={newMessage}
+                      setNewMessage={setNewMessage}
+                      sendNewMessage={sendNewMessage}
+                      currentChat={currentChat}
+                    />
+                  </>
+                )}
+                {!currentChat._id && (
+                  <Welcome setOpenUserFinderModal={setOpenUserFinderModal} />
+                )}
+              </PaperItem>
+            </Box>
+          </Box>
+        </>
+      )}
     </PageWrapper>
   );
 };

@@ -57,6 +57,7 @@ const initialState = {
   chatList: [],
   currentChat: {},
   chatMessages: [],
+  isChatLoading: false,
 };
 
 const chatSlice = createSlice({
@@ -111,9 +112,13 @@ const chatSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    builder.addCase(getAllChats.pending, (state) => {
+      state.isChatLoading = true;
+    });
     builder.addCase(getAllChats.fulfilled, (state, action) => {
       state.chatList = [...action.payload.chatList];
       state.chatMessages = [...action.payload.chatMessages];
+      state.isChatLoading = false;
     });
     builder.addCase(getOrCreateChat.fulfilled, (state, action) => {
       const chat = action.payload.chat.chat;
