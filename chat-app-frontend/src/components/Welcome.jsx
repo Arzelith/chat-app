@@ -12,9 +12,11 @@ const Welcome = ({ setOpenUserFinderModal }) => {
       width={'100%'}
       height={'100%'}
     >
-      <Lottie animationData={logo} style={{ height: '400px' }} loop={false} />
+      <Lottie animationData={logo} style={{ height: '320px' }} loop={false} />
       <Typography
         mb={5}
+        pl={2}
+        pr={2}
         variant='h5'
         color={'primary'}
         flexWrap={'wrap'}

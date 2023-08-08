@@ -14,6 +14,7 @@ const PageWrapper = ({ children, serverError, disconnect }) => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+        minHeight:500
       }}
     >
       {!serverError ? (

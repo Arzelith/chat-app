@@ -4,12 +4,19 @@
 
 .MuiTextField-root {
   background: #fff;
-
   border-radius: 6px;
 }
 
-.text-box, .chat-list {
+.text-box {
   overflow-y: auto;
   overflow-x: hidden;
   height: calc(100% - 134px);
 }
+
+.chat-list {
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: calc(100% - 64px);
+}
+
+
