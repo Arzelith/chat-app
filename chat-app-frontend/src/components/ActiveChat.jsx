@@ -10,6 +10,7 @@ const ActiveChat = ({
   newMessage,
   sendNewMessage,
   currentChat,
+  sentFlag,
 }) => {
   const [showBack, setShowBack] = useState(false);
   const bottomEl = useRef(null);
@@ -24,6 +25,10 @@ const ActiveChat = ({
       setNewMessage('');
     }
   }, [currentChat._id]);
+
+  useEffect(() => {
+    scrollToBottom('instant');
+  }, [sentFlag]);
 
   const onScroll = () => {
     if (listInnerRef.current) {
@@ -54,14 +59,13 @@ const ActiveChat = ({
         sx={{
           display: 'flex',
           flexDirection: 'column-reverse',
-          height: '100%',
           pl: { xl: '15%', sm: '10%', xs: '5%' },
           pr: { xl: '15%', sm: '10%', xs: '5%' },
         }}
-        className='text-box'
+        style={{ height: '100%', overflow: 'auto' }}
       >
         <div ref={bottomEl}></div>
-        {chatMessages?.messages.map((messageItem) => (
+        {chatMessages.messages.map((messageItem) => (
           <Box
             key={messageItem._id}
             display={'flex'}
@@ -84,6 +88,7 @@ const ActiveChat = ({
             maxHeight: '40px',
             minWidth: '40px',
             minHeight: '40px',
+            cursor: 'pointer',
           }}
           onClick={() => scrollToBottom('instant')}
         >
@@ -101,7 +106,6 @@ const ActiveChat = ({
         pl={4}
         display={'flex'}
         bgcolor={'#1976D2'}
-        onSubmit={(e) => sendNewMessage(e)}
       >
         <TextField
           variant='outlined'
@@ -109,8 +113,17 @@ const ActiveChat = ({
           sx={{ flexGrow: 1, mr: 1 }}
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
+          autoComplete='off'
         />
-        <Button variant='contained' color='info' type='submit'>
+        <Button
+          variant='contained'
+          color='info'
+          style={{ cursor: 'pointer' }}
+          type='submit'
+          onClick={(e) => {
+            sendNewMessage(e);
+          }}
+        >
           ENVIAR
         </Button>
       </Box>

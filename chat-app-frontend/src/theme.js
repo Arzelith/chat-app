@@ -9,9 +9,11 @@ const theme = createTheme({
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          background:'linear-gradient(180deg, rgba(13,71,121,1) 0%, rgba(27,175,210,1) 100%)',
-          minHeight: 500,
-          height:'100svh'
+          background:
+            'linear-gradient(180deg, rgba(13,71,121,1) 0%, rgba(27,175,210,1) 100%)',
+          backgroundColor: 'rgba(27,175,210,1)',
+          minHeight: '500px',
+          height: '100%',
         },
       },
     },

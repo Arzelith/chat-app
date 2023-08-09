@@ -43,6 +43,7 @@ const Chat = () => {
   const [openUserFinderModal, setOpenUserFinderModal] = useState(false);
   const [newMessage, setNewMessage] = useState('');
   const [isChatLoading, setIsChatLoading] = useState(true);
+  const [sentFlag, setSentFlag] = useState(false);
 
   const [socketConnected, setSocketConnected] = useState(false);
 
@@ -71,6 +72,9 @@ const Chat = () => {
           _id: uuidv4(),
         })
       );
+      //TEST
+      setSentFlag(!sentFlag);
+      //END TEST
       const message = newMessage;
       setNewMessage('');
       try {
@@ -172,69 +176,70 @@ const Chat = () => {
         </PaperWrapper>
       ) : (
         <>
-      <ModalForm
-        setOpenFormModal={setOpenFormModal}
-        openFormModal={openFormModal}
-        socket={socket}
-        chatList={chatList}
-      />
-      <UserFinder
-        openUserFinderModal={openUserFinderModal}
-        setOpenUserFinderModal={setOpenUserFinderModal}
-      />
-      <Box display={'flex'} flexDirection={'row'} width={'100%'}>
-        <Box
-          mr={{ xs: 0, md: 2 }}
-          width={{ xs: '100%', md: '600px' }}
-          display={{ xs: currentChat._id ? 'none' : 'block', md: 'block' }}
-        >
-          <BoxItem variant=''>
-            <ActionBar
-              variant={'left'}
-              setOpenFormModal={setOpenFormModal}
-              setOpenUserFinderModal={setOpenUserFinderModal}
-              disconnect={() => socket.disconnect()}
-              user={user}
-              socket={socket}
-              chatList={chatList}
-            />
-            <ChatList user={user} currentChat={currentChat} />
-          </BoxItem>
-        </Box>
-        <Box
-          width={'100%'}
-          display={{
-            xs: currentChat._id ? 'block' : 'none',
-            md: 'block',
-            position: 'relative',
-          }}
-        >
-          <BoxItem variant='outlined'>
-            {currentChat._id && (
-              <>
+          <ModalForm
+            setOpenFormModal={setOpenFormModal}
+            openFormModal={openFormModal}
+            socket={socket}
+            chatList={chatList}
+          />
+          <UserFinder
+            openUserFinderModal={openUserFinderModal}
+            setOpenUserFinderModal={setOpenUserFinderModal}
+          />
+          <Box display={'flex'} flexDirection={'row'} width={'100%'}>
+            <Box
+              mr={{ xs: 0, md: 2 }}
+              width={{ xs: '100%', md: '600px' }}
+              display={{ xs: currentChat._id ? 'none' : 'block', md: 'block' }}
+            >
+              <BoxItem variant=''>
                 <ActionBar
-                  variant={'right'}
-                  user={currentChat.users.find((item) => item._id !== user._id)}
-                />
-                <ActiveChat
-                  chatMessages={chatMessages.find(
-                    (item) => item.chat === currentChat._id
-                  )}
+                  variant={'left'}
+                  setOpenFormModal={setOpenFormModal}
+                  setOpenUserFinderModal={setOpenUserFinderModal}
+                  disconnect={() => socket.disconnect()}
                   user={user}
-                  newMessage={newMessage}
-                  setNewMessage={setNewMessage}
-                  sendNewMessage={sendNewMessage}
-                  currentChat={currentChat}
+                  socket={socket}
+                  chatList={chatList}
                 />
-              </>
-            )}
-            {!currentChat._id && (
-              <Welcome setOpenUserFinderModal={setOpenUserFinderModal} />
-            )}
-          </BoxItem>
-        </Box>
-      </Box>
-      </>
+                <ChatList user={user} currentChat={currentChat} />
+              </BoxItem>
+            </Box>
+            <Box
+              width={'100%'}
+              display={{
+                xs: currentChat._id ? 'block' : 'none',
+                md: 'block',
+                position: 'relative',
+              }}
+            >
+              <BoxItem variant='outlined'>
+                {currentChat._id && (
+                  <>
+                    <ActionBar
+                      variant={'right'}
+                      user={currentChat.users.find((item) => item._id !== user._id)}
+                    />
+                    <ActiveChat
+                      chatMessages={chatMessages.find(
+                        (item) => item.chat === currentChat._id
+                      )}
+                      user={user}
+                      newMessage={newMessage}
+                      setNewMessage={setNewMessage}
+                      sendNewMessage={sendNewMessage}
+                      currentChat={currentChat}
+                      sentFlag={sentFlag}
+                    />
+                  </>
+                )}
+                {!currentChat._id && (
+                  <Welcome setOpenUserFinderModal={setOpenUserFinderModal} />
+                )}
+              </BoxItem>
+            </Box>
+          </Box>
+        </>
       )}
     </PageWrapper>
   );
