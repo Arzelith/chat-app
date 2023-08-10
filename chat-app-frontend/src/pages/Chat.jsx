@@ -41,9 +41,7 @@ const Chat = () => {
   const { serverError } = useSelector((storage) => storage.error);
   const [openFormModal, setOpenFormModal] = useState('');
   const [openUserFinderModal, setOpenUserFinderModal] = useState(false);
-  const [newMessage, setNewMessage] = useState('');
   const [isChatLoading, setIsChatLoading] = useState(true);
-  const [sentFlag, setSentFlag] = useState(false);
 
   const [socketConnected, setSocketConnected] = useState(false);
 
@@ -60,8 +58,7 @@ const Chat = () => {
     }
   };
 
-  const sendNewMessage = async (e) => {
-    e.preventDefault();
+  const sendNewMessage = async (newMessage) => {
     if (newMessage.trim().length > 0) {
       dispatch(
         setPendingMessage({
@@ -72,11 +69,8 @@ const Chat = () => {
           _id: uuidv4(),
         })
       );
-      //TEST
-      setSentFlag(!sentFlag);
-      //END TEST
+
       const message = newMessage;
-      setNewMessage('');
       try {
         await dispatch(
           sendMessage({
@@ -225,11 +219,8 @@ const Chat = () => {
                         (item) => item.chat === currentChat._id
                       )}
                       user={user}
-                      newMessage={newMessage}
-                      setNewMessage={setNewMessage}
                       sendNewMessage={sendNewMessage}
                       currentChat={currentChat}
-                      sentFlag={sentFlag}
                     />
                   </>
                 )}

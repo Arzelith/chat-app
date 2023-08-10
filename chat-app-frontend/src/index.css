@@ -7,16 +7,5 @@
   border-radius: 6px;
 }
 
-.text-box {
-  overflow-y: auto;
-  overflow-x: hidden;
-  height: calc(100% - 128px);
-}
-
-.chat-list {
-  overflow-y: auto;
-  overflow-x: hidden;
-  height: calc(100% - 64px);
-}
 
 

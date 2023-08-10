@@ -3,38 +3,37 @@ import { MessageBuble } from './';
 import { Box, TextField, Button, List } from '@mui/material';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
-const ActiveChat = ({
-  user,
-  chatMessages,
-  setNewMessage,
-  newMessage,
-  sendNewMessage,
-  currentChat,
-  sentFlag,
-}) => {
+const ActiveChat = ({ user, chatMessages, sendNewMessage, currentChat }) => {
   const [showBack, setShowBack] = useState(false);
   const bottomEl = useRef(null);
+  const bottomElB = useRef(null);
   const listInnerRef = useRef(null);
-  const scrollToBottom = (behavior) => {
-    bottomEl?.current?.scrollIntoView({ behavior: behavior });
+  const formRef = useRef(null);
+  const messageRef = useRef(null);
+
+  const scrollToBottom = (behavior, el) => {
+    el?.current?.scrollIntoView({ behavior: behavior });
   };
 
   useEffect(() => {
     if (currentChat._id) {
       scrollToBottom('instant');
-      setNewMessage('');
     }
   }, [currentChat._id]);
 
   useEffect(() => {
-    scrollToBottom('instant');
-  }, [sentFlag]);
+    if (!showBack) {
+      scrollToBottom('instant', bottomEl);
+    }else{
+      scrollToBottom('instant', bottomElB);
+    }
+  }, [chatMessages.messages[0]]);
 
   const onScroll = () => {
     if (listInnerRef.current) {
-      const { scrollTop, scrollHeight } = listInnerRef.current;
-      const isNearBottom = scrollHeight - scrollTop <= scrollHeight;
-      if (!isNearBottom) {
+      const { scrollTop, clientHeight } = listInnerRef.current;
+      const isNearBottomB = (scrollTop * -1) <= clientHeight/2;
+      if (!isNearBottomB) {
         setShowBack(true);
       } else {
         setShowBack(false);
@@ -52,8 +51,16 @@ const ActiveChat = ({
     }
   }, []);
 
+  const handleMessage = (e) => {
+    e.preventDefault();
+    const newMessage = formRef.current.message.value;
+    sendNewMessage(newMessage);
+    formRef.current.reset();
+    formRef.current.message.focus();
+  };
+
   return (
-    <div className='text-box'>
+    <>
       <List
         ref={listInnerRef}
         sx={{
@@ -61,8 +68,9 @@ const ActiveChat = ({
           flexDirection: 'column-reverse',
           pl: { xl: '15%', sm: '10%', xs: '5%' },
           pr: { xl: '15%', sm: '10%', xs: '5%' },
+          overflowY:'auto',
+          height:'77svh'
         }}
-        style={{ height: '100%', overflow: 'auto' }}
       >
         <div ref={bottomEl}></div>
         {chatMessages.messages.map((messageItem) => (
@@ -75,6 +83,7 @@ const ActiveChat = ({
           </Box>
         ))}
       </List>
+
       {showBack && (
         <Button
           variant='contained'
@@ -90,7 +99,7 @@ const ActiveChat = ({
             minHeight: '40px',
             cursor: 'pointer',
           }}
-          onClick={() => scrollToBottom('instant')}
+          onClick={() => scrollToBottom('instant', bottomEl)}
         >
           <ArrowDownwardIcon />
         </Button>
@@ -106,28 +115,20 @@ const ActiveChat = ({
         pl={4}
         display={'flex'}
         bgcolor={'#1976D2'}
+        ref={formRef}
+        onSubmit={(e) => handleMessage(e)}
       >
         <TextField
           variant='outlined'
           size='small'
-          sx={{ flexGrow: 1, mr: 1 }}
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
+          sx={{ flexGrow: 0.9, mr: 'auto', ml: 'auto' }}
+          name='message'
           autoComplete='off'
+          ref={messageRef}
         />
-        <Button
-          variant='contained'
-          color='info'
-          style={{ cursor: 'pointer' }}
-          type='submit'
-          onClick={(e) => {
-            sendNewMessage(e);
-          }}
-        >
-          ENVIAR
-        </Button>
       </Box>
-    </div>
+      <div ref={bottomElB}></div>
+    </>
   );
 };
 

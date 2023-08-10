@@ -45,7 +45,7 @@ const ChatList = ({ user, currentChat }) => {
   };
 
   return (
-    <List className='chat-list' sx={{ pt: 0 }}>
+    <List className='' sx={{ pt: 0, overflowY: 'auto', height: '85svh' }}>
       {chatList.map((chatItem) => (
         <Box key={chatItem._id}>
           {chatItem?.latestMessage?.content && (
@@ -77,7 +77,7 @@ const ChatList = ({ user, currentChat }) => {
                 <ListItemText
                   disableTypography
                   secondary={
-                    <Typography variant='body2' >{latestMessageText(chatItem)}</Typography>
+                    <Typography variant='body2'>{latestMessageText(chatItem)}</Typography>
                   }
                   primary={
                     <Typography variant='body1' fontWeight={'bold'} color={'primary'}>
