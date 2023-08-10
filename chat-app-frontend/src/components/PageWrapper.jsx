@@ -32,7 +32,7 @@ const PageWrapper = ({ children, serverError, disconnect }) => {
           {children}
         </>
       ) : (
-        <DisplayError message={serverError.statusText} status={serverError.status} />
+        <DisplayError message={serverError.statusText} status={serverError.status} disconnect={disconnect} />
       )}
     </Container>
   );
