@@ -4,12 +4,13 @@ import { Button, Typography, Box } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { logoutUser } from '../features/userSlice';
 
-const DisplayError = ({ message, status }) => {
+const DisplayError = ({ message, status, disconnect }) => {
   const dispatch = useDispatch();
   const location = useLocation();
   const refresh = () => {
     if (status >= 500 && location.pathname === '/') {
       dispatch(logoutUser());
+      disconnect();
     } else {
       window.location.reload(false);
     }
