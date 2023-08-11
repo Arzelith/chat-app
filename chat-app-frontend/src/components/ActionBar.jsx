@@ -4,15 +4,13 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import { logoutUser, updateUserAvatar, updateUserStatus } from '../features/userSlice';
 import { exitCurrentChat } from '../features/chatSlice';
 import { setServerError } from '../features/serverErrorSlice';
-import { UserAvatar, CustomBadge } from './';
+import { UserAvatar, CustomBadge, DropDownMenu } from './';
 import {
   AppBar,
   Toolbar,
   IconButton,
   Typography,
   Box,
-  MenuItem,
-  Menu,
 } from '@mui/material';
 import {
   MoreVert,
@@ -103,6 +101,7 @@ const ActionBar = ({
                 onClick={(e) => {
                   handleOpenMenu(e, 'avatar');
                 }}
+                sx={{ cursor: 'pointer' }}
               >
                 <CustomBadge
                   top={34}
@@ -121,23 +120,12 @@ const ActionBar = ({
                 </CustomBadge>
               </Box>
 
-              <Menu
+              <DropDownMenu
                 anchorEl={anchorEl}
                 open={open === 'avatar'}
-                onClose={handleCloseMenu}
-              >
-                {avatarMenuItems.map((menuItem) => (
-                  <MenuItem
-                    key={menuItem.text}
-                    onClick={() => {
-                      handleCloseMenu();
-                      menuItem.action();
-                    }}
-                  >
-                    {menuItem.text}
-                  </MenuItem>
-                ))}
-              </Menu>
+                handleCloseMenu={handleCloseMenu}
+                arr={avatarMenuItems}
+              />
             </Box>
 
             <Box flexGrow={1}>
@@ -167,30 +155,18 @@ const ActionBar = ({
               </Box>
             </Box>
 
-            <Menu anchorEl={anchorEl} open={open === 'status'} onClose={handleCloseMenu}>
-              {statusMenuItems.map((menuItem) => (
-                <MenuItem
-                  key={menuItem.text}
-                  onClick={() => {
-                    menuItem.action();
-                    handleCloseMenu();
-                  }}
-                >
-                  {menuItem.text}
-                </MenuItem>
-              ))}
-            </Menu>
+            <DropDownMenu
+              anchorEl={anchorEl}
+              open={open === 'status'}
+              handleCloseMenu={handleCloseMenu}
+              arr={statusMenuItems}
+            />
 
-            <IconButton
-              color='inherit'
-              size='large'
-              onClick={() => setOpenUserFinderModal(true)}
-            >
+            <IconButton color='inherit' onClick={() => setOpenUserFinderModal(true)}>
               <AddComment />
             </IconButton>
 
             <IconButton
-              size='large'
               color='inherit'
               onClick={(e) => {
                 handleOpenMenu(e, 'vertical');
@@ -198,23 +174,13 @@ const ActionBar = ({
             >
               <MoreVert />
             </IconButton>
-            <Menu
+
+            <DropDownMenu
               anchorEl={anchorEl}
               open={open === 'vertical'}
-              onClose={handleCloseMenu}
-            >
-              {verticalMenuItems.map((menuItem) => (
-                <MenuItem
-                  key={menuItem.text}
-                  onClick={() => {
-                    handleCloseMenu();
-                    menuItem.action();
-                  }}
-                >
-                  {menuItem.text}
-                </MenuItem>
-              ))}
-            </Menu>
+              handleCloseMenu={handleCloseMenu}
+              arr={verticalMenuItems}
+            />
           </>
         )}
         {variant === 'right' && (

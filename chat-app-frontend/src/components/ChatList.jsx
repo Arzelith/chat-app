@@ -51,6 +51,7 @@ const ChatList = ({ user, currentChat }) => {
           {chatItem?.latestMessage?.content && (
             <ListItem divider disableGutters disablePadding>
               <ListItemButton
+                selected={chatItem._id === currentChat._id}
                 onClick={() => {
                   enterChat({
                     userId: correctUser(chatItem)._id,

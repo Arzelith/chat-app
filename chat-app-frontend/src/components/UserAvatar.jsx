@@ -21,7 +21,7 @@ const UserAvatar = ({ displayName, height, width, avatar, ...otherProps }) => {
   return (
     <Avatar
       src={avatar}
-      sx={{ height: height, width: width, cursor: 'pointer', bgcolor: stringToColor() }}
+      sx={{ height: height, width: width, bgcolor: stringToColor() }}
       {...otherProps}
     >
       {!avatar && displayName[0].toUpperCase()}

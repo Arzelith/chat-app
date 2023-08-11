@@ -17,6 +17,7 @@ import UserList from './UserList';
 import ChatList from './ChatList';
 import CustomBadge from './CustomBadge';
 import MessageBuble from './MessageBuble';
+import DropDownMenu from './DropDownMenu';
 
 export {
   FormInput,
@@ -37,5 +38,6 @@ export {
   UserList,
   ChatList,
   CustomBadge,
-  MessageBuble
+  MessageBuble,
+  DropDownMenu
 };

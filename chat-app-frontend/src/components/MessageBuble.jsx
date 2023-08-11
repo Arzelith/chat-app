@@ -20,9 +20,9 @@ const MessageBuble = ({ user, messageItem }) => {
       )}
       <Box
         component={Paper}
-        variant='outlined'
-        pt={0.5}
-        pb={0.5}
+        elevation={3}
+        pt={1}
+        pb={1}
         pr={1}
         pl={1}
         ml={0.5}

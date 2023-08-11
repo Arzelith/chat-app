@@ -24,7 +24,7 @@ const ActiveChat = ({ user, chatMessages, sendNewMessage, currentChat }) => {
   useEffect(() => {
     if (!showBack) {
       scrollToBottom('instant', bottomEl);
-    }else{
+    } else {
       scrollToBottom('instant', bottomElB);
     }
   }, [chatMessages.messages[0]]);
@@ -32,7 +32,7 @@ const ActiveChat = ({ user, chatMessages, sendNewMessage, currentChat }) => {
   const onScroll = () => {
     if (listInnerRef.current) {
       const { scrollTop, clientHeight } = listInnerRef.current;
-      const isNearBottomB = (scrollTop * -1) <= clientHeight/2;
+      const isNearBottomB = scrollTop * -1 <= clientHeight / 2;
       if (!isNearBottomB) {
         setShowBack(true);
       } else {
@@ -66,10 +66,11 @@ const ActiveChat = ({ user, chatMessages, sendNewMessage, currentChat }) => {
         sx={{
           display: 'flex',
           flexDirection: 'column-reverse',
-          pl: { xl: '15%', sm: '10%', xs: '5%' },
-          pr: { xl: '15%', sm: '10%', xs: '5%' },
-          overflowY:'auto',
-          height:'77svh'
+          pl: { xl: '20%', sm: '10%', xs: '5%' },
+          pr: { xl: '20%', sm: '10%', xs: '5%' },
+          overflowY: 'auto',
+          height: 'calc(100% - 133px)',
+          backgroundColor:'#e3eefa'
         }}
       >
         <div ref={bottomEl}></div>
@@ -91,8 +92,6 @@ const ActiveChat = ({ user, chatMessages, sendNewMessage, currentChat }) => {
             position: 'absolute',
             bottom: 120,
             right: 40,
-          }}
-          style={{
             maxWidth: '40px',
             maxHeight: '40px',
             minWidth: '40px',
@@ -108,23 +107,30 @@ const ActiveChat = ({ user, chatMessages, sendNewMessage, currentChat }) => {
         component={'form'}
         position={'absolute'}
         bottom={0}
+        left={0}
         width={'100%'}
-        pt={2}
-        pb={2}
+        height={'72px'}
         pr={4}
         pl={4}
         display={'flex'}
-        bgcolor={'#1976D2'}
+        alignContent={'center'}
+        justifyContent={'center'}
+        bgcolor={'primary.main'}
+        style={{ borderBottomRightRadius: '12px', borderBottomLeftRadius: '12px' }}
         ref={formRef}
         onSubmit={(e) => handleMessage(e)}
       >
         <TextField
           variant='outlined'
           size='small'
-          sx={{ flexGrow: 0.9, mr: 'auto', ml: 'auto' }}
+          sx={{
+            flexGrow: 0.9,
+            m: 'auto',
+          }}
           name='message'
           autoComplete='off'
           ref={messageRef}
+          className='MessageInput'
         />
       </Box>
       <div ref={bottomElB}></div>

@@ -21,7 +21,7 @@ import {
   ChatList,
   PaperWrapper,
 } from '../components';
-import { Box, Typography, CircularProgress } from '@mui/material';
+import { Box, Typography, CircularProgress, Paper } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 import io from 'socket.io-client';
@@ -29,10 +29,14 @@ const IO_ENDPOINT = import.meta.env.VITE_SOCKET_URL;
 let socket;
 let selectedChat;
 
-const BoxItem = styled(Box)(() => ({
+const BoxItem = styled(Paper)(() => ({
   backgroundColor: '#fff',
   height: '94svh',
   minHeight: '500px',
+  borderRadius:'15px',
+  overflowX:'hidden',
+  overflowY:'hidden',
+  border:'2px solid #fff'
 }));
 
 const Chat = () => {
@@ -186,7 +190,7 @@ const Chat = () => {
               width={{ xs: '100%', md: '600px' }}
               display={{ xs: currentChat._id ? 'none' : 'block', md: 'block' }}
             >
-              <BoxItem variant=''>
+              <BoxItem elevation={5}>
                 <ActionBar
                   variant={'left'}
                   setOpenFormModal={setOpenFormModal}
@@ -207,7 +211,7 @@ const Chat = () => {
                 position: 'relative',
               }}
             >
-              <BoxItem variant='outlined'>
+              <BoxItem elevation={5} sx={{backgroundColor:'#e3eefa'}}>
                 {currentChat._id && (
                   <>
                     <ActionBar

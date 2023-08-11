@@ -4,7 +4,7 @@ const PaperWrapper = ({ children, ...otherProps }) => {
   return (
     <Paper
       {...otherProps}
-      variant='outlined'
+      elevation={5}
       sx={{
         p: 4,
         width: '480px',
