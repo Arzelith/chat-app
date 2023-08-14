@@ -195,7 +195,6 @@ const ActionBar = ({
               {user.displayName}
             </Typography>
             <IconButton
-              autoFocus
               color='inherit'
               onClick={() => {
                 dispatch(exitCurrentChat());

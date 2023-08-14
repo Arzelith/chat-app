@@ -30,7 +30,7 @@ const ChatList = ({ user, currentChat }) => {
     const latestMessage = chatItem?.latestMessage?.content;
     if (latestMessage) {
       return latestMessage.length > 20
-        ? latestMessage.substring(0, 18) + '...'
+        ? latestMessage.substring(0, 19) + '...'
         : latestMessage;
     }
     return '';

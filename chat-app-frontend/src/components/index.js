@@ -18,6 +18,8 @@ import ChatList from './ChatList';
 import CustomBadge from './CustomBadge';
 import MessageBuble from './MessageBuble';
 import DropDownMenu from './DropDownMenu';
+import ChatBox from './ChatBox';
+import EmojiPickerContainer from './EmojiPickerContainer';
 
 export {
   FormInput,
@@ -39,5 +41,7 @@ export {
   ChatList,
   CustomBadge,
   MessageBuble,
-  DropDownMenu
+  DropDownMenu,
+  ChatBox,
+  EmojiPickerContainer,
 };
