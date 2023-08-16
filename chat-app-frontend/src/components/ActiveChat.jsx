@@ -29,6 +29,12 @@ const ActiveChat = ({ user, chatMessages, sendNewMessage, currentChat }) => {
   };
 
   useEffect(() => {
+    if (currentChat._id) {
+      setShowEmojiList(false);
+    }
+  }, [currentChat._id]);
+
+  useEffect(() => {
     if (showBack) {
       scrollToBottom('instant', bottomElB);
     }
@@ -107,7 +113,6 @@ const ActiveChat = ({ user, chatMessages, sendNewMessage, currentChat }) => {
             sx={{ mr: 1 }}
             onClick={() => {
               setShowEmojiList(!showEmojiList);
-              // formRef.current.message.focus();
             }}
           >
             <EmojiEmotionsIcon fontSize='medium' sx={{ color: '#fff' }} />
