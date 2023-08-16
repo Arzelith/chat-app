@@ -105,10 +105,10 @@ const UserList = ({
             alignItems={'center'}
             height={284}
           >
-            {userList.length === 0 && value === '1' && (
+            {userFinder.length === 0 && value === '1' && (
               <Typography>Busque usuarios para iniciar un chat</Typography>
             )}
-            {favoriteList.length === 0 && value === '2' && (
+            {userFinder.length === 0 && value === '2' && (
               <Typography>No existen usuarios registrados</Typography>
             )}
           </Box>

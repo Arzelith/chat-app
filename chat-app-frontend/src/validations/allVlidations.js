@@ -1,11 +1,14 @@
 import * as Yup from 'yup';
+import isEmail from 'validator/lib/isEmail';
 
 const passwordValidation = () => {
   return Yup.string().required('password es requerido');
 };
 
 const emailValidation = () => {
-  return Yup.string().email('email inválido').required('email es requerido');
+  return Yup.string()
+  .required('email es requerido')
+  .test('is-valid', 'email no es válido', (value) => isEmail(value))
 };
 
 const displayNameValidation = () => {
@@ -26,8 +29,7 @@ const confirmPasswordValidation = () => {
   return Yup.string().oneOf([Yup.ref('password'), null], 'passwords no concuerdan');
 };
 
-//image validation
-const MAX_FILE_SIZE = 10240000; //100KB
+const MAX_FILE_SIZE = 10240000;
 const validFileExtensions = { image: ['jpg', 'gif', 'png', 'jpeg'] };
 function isValidFileType(fileName, fileType) {
   return (

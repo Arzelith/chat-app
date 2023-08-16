@@ -49,18 +49,15 @@ const ActiveChat = ({ user, chatMessages, sendNewMessage, currentChat }) => {
     setMessage(emojiMessage);
     messageRef.selectionEnd = start.length + emoji.length;
     setCursorPosition(start.length + emoji.length);
+    setEmoji('');
   };
 
   useEffect(() => {
-    handleEmoji();
     if (emoji) {
-      setEmoji('');
+      handleEmoji();
     }
-  }, [emoji]);
-
-  useEffect(() => {
     formRef.current.message.selectionEnd = cursorPosition;
-  }, [cursorPosition]);
+  }, [emoji, cursorPosition]);
 
   return (
     <>
@@ -110,7 +107,7 @@ const ActiveChat = ({ user, chatMessages, sendNewMessage, currentChat }) => {
             sx={{ mr: 1 }}
             onClick={() => {
               setShowEmojiList(!showEmojiList);
-              formRef.current.message.focus();
+              // formRef.current.message.focus();
             }}
           >
             <EmojiEmotionsIcon fontSize='medium' sx={{ color: '#fff' }} />

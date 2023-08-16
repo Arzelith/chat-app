@@ -111,7 +111,11 @@ const UserFinder = ({ openUserFinderModal, setOpenUserFinderModal }) => {
         variant='contained'
         color='error'
         size='large'
-        onClick={() => setOpenUserFinderModal(false)}
+        onClick={() => {
+          setOpenUserFinderModal(false);
+          setUserFinder('');
+          setActiveTab('1');
+        }}
       >
         Cerrar
       </Button>
