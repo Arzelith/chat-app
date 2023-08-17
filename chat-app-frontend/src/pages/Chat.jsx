@@ -199,6 +199,7 @@ const Chat = () => {
                   user={user}
                   socket={socket}
                   chatList={chatList}
+                  currentChat={currentChat}
                 />
                 <ChatList user={user} currentChat={currentChat} />
               </BoxItem>

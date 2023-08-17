@@ -2,22 +2,17 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import { logoutUser, updateUserAvatar, updateUserStatus } from '../features/userSlice';
-import { exitCurrentChat } from '../features/chatSlice';
+import { exitCurrentChat, disableChat } from '../features/chatSlice';
 import { setServerError } from '../features/serverErrorSlice';
 import { UserAvatar, CustomBadge, DropDownMenu } from './';
-import {
-  AppBar,
-  Toolbar,
-  IconButton,
-  Typography,
-  Box,
-} from '@mui/material';
+import { AppBar, Toolbar, IconButton, Typography, Box } from '@mui/material';
 import {
   MoreVert,
   ExpandLess,
   ExpandMore,
   AddComment,
   ArrowBack,
+  DeleteForever,
 } from '@mui/icons-material';
 
 const ActionBar = ({
@@ -28,6 +23,7 @@ const ActionBar = ({
   disconnect,
   socket,
   chatList,
+  currentChat,
 }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [open, setOpen] = useState('');
@@ -67,6 +63,14 @@ const ActionBar = ({
       await dispatch(
         updateUserStatus({ axiosPrivate, values: { status, socket, chatList } })
       ).unwrap();
+    } catch (error) {
+      dispatch(setServerError(error));
+    }
+  };
+
+  const removeChat = async () => {
+    try {
+      await dispatch(disableChat({ axiosPrivate, values: { chatId: currentChat._id } }));
     } catch (error) {
       dispatch(setServerError(error));
     }
@@ -166,6 +170,15 @@ const ActionBar = ({
               <AddComment />
             </IconButton>
 
+            {currentChat._id && (
+              <IconButton
+                color='inherit'
+                onClick={() => removeChat()}
+                sx={{ mb: 0.4 }}
+              >
+                <DeleteForever />
+              </IconButton>
+            )}
             <IconButton
               color='inherit'
               onClick={(e) => {

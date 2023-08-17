@@ -20,7 +20,7 @@ const DisplayError = ({ message, status, disconnect }) => {
     }
   };
   return (
-    <Box component={PaperWrapper} alignItems={'center'}>
+    <Box component={PaperWrapper} alignItems={'center'} sx={{p:2}}>
       <Typography variant='h4' fontWeight={'bold'}>
         {status}
       </Typography>
@@ -30,7 +30,7 @@ const DisplayError = ({ message, status, disconnect }) => {
       <Button
         variant='contained'
         size='large'
-        sx={{ width: 'fit-content', mt: 2 }}
+        sx={{ width: 'fit-content', mt: 1 }}
         onClick={() => {
           refresh();
         }}

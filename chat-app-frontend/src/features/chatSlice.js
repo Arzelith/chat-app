@@ -37,6 +37,18 @@ export const getOrCreateChat = createAsyncThunk(
   }
 );
 
+export const disableChat = createAsyncThunk(
+  'chat/disableChat',
+  async ({ axiosPrivate, values }, thunkAPI) => {
+    try {
+      const { data } = await axiosPrivate.patch(`/chat/disable/${values.chatId}`);
+      return data;
+    } catch (error) {
+      return handleServerError(error, thunkAPI);
+    }
+  }
+);
+
 export const sendMessage = createAsyncThunk(
   'chat/sendMessage',
   async ({ axiosPrivate, values }, thunkAPI) => {
@@ -137,6 +149,11 @@ const chatSlice = createSlice({
       const newMessage = action.payload.message;
       const chatId = action.payload.message.chat._id;
       state.chatMessages.find((item) => item.chat === chatId).messages[0] = newMessage;
+    });
+    builder.addCase(disableChat.fulfilled, (state, action) => {
+      state.chatList = state.chatList.filter(
+        (item) => item._id !== action?.payload?.chat?._id
+      );
     });
   },
 });
