@@ -24,7 +24,7 @@ app.use(
   cors({
     origin:
       process.env.NODE_ENV !== 'production'
-        ? ['http://localhost:3000', 'http://127.0.0.1:3000', 'http://192.168.0.13:3000']
+        ? ['http://localhost:3000']
         : [process.env.ORIGIN],
     credentials: true,
     methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
@@ -66,7 +66,7 @@ const startServer = async () => {
       cors: {
         origin:
           process.env.NODE_ENV !== 'production'
-            ? ['http://localhost:3000', 'http://127.0.0.1:3000', 'http://192.168.0.13:3000']
+            ? ['http://localhost:3000']
             : [process.env.ORIGIN],
         credentials: true,
         methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
