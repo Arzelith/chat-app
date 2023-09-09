@@ -125,6 +125,7 @@ const Login = () => {
                   type={input.type ? input.type : 'text'}
                   margin='normal'
                   autoComplete={input.autoComplete}
+                  disabled={isSubmitting}
                 />
               ))}
             <FormBtnCombo
