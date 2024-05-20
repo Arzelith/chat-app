@@ -1,5 +1,5 @@
 import { createTheme, responsiveFontSizes } from '@mui/material/styles';
-
+import img from './assets/images/bg.jpg'
 const theme = createTheme({
   palette: {
     mode: 'light',
@@ -8,6 +8,7 @@ const theme = createTheme({
     MuiTextField: {
       styleOverrides: {
         root: {
+
           background: '#fff',
           borderRadius: '6px',
           '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
@@ -23,7 +24,7 @@ const theme = createTheme({
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          backgroundImage: "url('../src/assets/images/bg.jpg')",
+          backgroundImage: `url(${img})`,
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center center',
           backgroundSize: 'cover',
