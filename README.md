@@ -23,5 +23,7 @@ Aplicación de mensajería instantánea.
    CLOUDINARY_API_SECRET_KEY = tu cloudinary api secret key
    ORIGIN = https://dirección-de-mi-frontend-en-la-web/chat-app-api/v1 (*solo producción)
 
+   KEEP_ALIVE_URL = 'http://dirección-de-mi-backend-en-la-web/chat-app-api/v1/keep-alive' (*solo si es requerido)
+
 5. En chat-app-backend: npm run dev
 6. En chat-app-frontend: npm run dev
