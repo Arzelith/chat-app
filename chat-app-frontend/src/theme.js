@@ -23,20 +23,24 @@ const theme = createTheme({
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          background:
-            'linear-gradient(180deg, rgba(13,71,121,1) 0%, rgba(27,175,210,1) 100%)',
+          backgroundImage: "url('../src/assets/images/bg.jpg')",
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center center',
+          backgroundSize: 'cover',
+          backgroundAttachment: 'fixed',
           backgroundColor: 'rgba(27,175,210,1)',
           minHeight: '500px',
           height: '100%',
-          
+
           '&::-webkit-scrollbar, & *::-webkit-scrollbar': {
             backgroundColor: 'transparent',
             width: '10px',
           },
           '&::-webkit-scrollbar-thumb, & *::-webkit-scrollbar-thumb': {
             backgroundColor: '#61abf6',
-            borderColor:'#fff',
+            borderColor: '#fff',
             minHeight: 24,
+            borderRadius: '10px',
           },
         },
       },

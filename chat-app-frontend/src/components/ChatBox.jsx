@@ -11,6 +11,16 @@ const SquareButton = styled(Button)(() => ({
   minHeight: '40px',
 }));
 
+const ChatList= styled(List)(() => ({
+  display: 'flex',
+  flexDirection: 'column-reverse',
+  overflowY:'auto',
+  background: 'rgba(255, 255, 255, 0.2)',
+  height:'calc(100% - 133px)',
+  backdropFilter: blur('5px'),
+  WebkitBackdropFilter: blur('5px'),
+}));
+
 const ChatBoxToMemo = ({ user, chatMessages, currentChat, showBack, setShowBack }) => {
   const bottomEl = useRef(null);
   const listInnerRef = useRef(null);
@@ -55,17 +65,9 @@ const ChatBoxToMemo = ({ user, chatMessages, currentChat, showBack, setShowBack 
 
   return (
     <>
-      <List
+      <ChatList
         ref={listInnerRef}
-        sx={{
-          display: 'flex',
-          flexDirection: 'column-reverse',
-          pl: { xl: '20%', sm: '10%', xs: '5%' },
-          pr: { xl: '20%', sm: '10%', xs: '5%' },
-          overflowY: 'auto',
-          height: 'calc(100% - 133px)',
-          backgroundColor: '#e3eefa',
-        }}
+        sx={{pr:{xl: '15%', sm: '10%', xs: '5%'}, pl:{xl: '15%', sm: '10%', xs: '5%'}}}
       >
         <div ref={bottomEl}></div>
         {chatMessages.messages.map((messageItem) => (
@@ -77,7 +79,7 @@ const ChatBoxToMemo = ({ user, chatMessages, currentChat, showBack, setShowBack 
             <MessageBuble user={user} messageItem={messageItem} />
           </Box>
         ))}
-      </List>
+      </ChatList>
 
       {showBack && (
         <SquareButton

@@ -30,13 +30,15 @@ let socket;
 let selectedChat;
 
 const BoxItem = styled(Paper)(() => ({
-  backgroundColor: '#fff',
   height: '94svh',
   minHeight: '500px',
-  borderRadius:'15px',
-  overflowX:'hidden',
-  overflowY:'hidden',
-  border:'2px solid #fff'
+  borderRadius: '15px',
+  overflowX: 'hidden',
+  overflowY: 'hidden',
+  border: '2px solid #fff',
+  background: 'rgba(255, 255, 255, 0.5)',
+  backdropFilter: blur('5px'),
+  WebkitBackdropFilter: blur('5px'),
 }));
 
 const Chat = () => {
@@ -212,7 +214,7 @@ const Chat = () => {
                 position: 'relative',
               }}
             >
-              <BoxItem elevation={5} sx={{backgroundColor:'#e3eefa'}}>
+              <BoxItem elevation={5}>
                 {currentChat._id && (
                   <>
                     <ActionBar
