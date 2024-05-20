@@ -10,7 +10,11 @@ const logoutRoutes = require('./routes/logout-routes');
 const chatRoutes = require('./routes/chat-routes');
 const messageRoutes = require('./routes/message-routes');
 const favoriteRoutes = require('./routes/favorite-routes');
+const keepAliveRoutes = require('./routes/keep-alive-routes');
 //END ROUTE-IMPORTS
+
+//Cron job (previene suspención en tier gratuito)
+const job = require('./utils/keep-alive').job;
 
 const User = require('./models/user-model');
 const Chat = require('./models/chat-model');
@@ -50,6 +54,7 @@ app.use(`${v1}/logout`, logoutRoutes);
 app.use(`${v1}/chat`, chatRoutes);
 app.use(`${v1}/message`, messageRoutes);
 app.use(`${v1}/favorite`, favoriteRoutes);
+app.use(`${v1}/keep-alive`, keepAliveRoutes);
 
 //END ROUTES
 app.use(apiErrorHandler);
@@ -60,6 +65,9 @@ const startServer = async () => {
   try {
     const server = app.listen(port, () => {
       console.log(`Server corriendo en puert:${port}`);
+      if (process.env.KEEP_ALIVE_URL) {
+        job.start();
+      }
     });
     //SOCKET.IO
     const io = require('socket.io')(server, {
