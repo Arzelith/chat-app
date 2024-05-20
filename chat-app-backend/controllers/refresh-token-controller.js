@@ -12,7 +12,7 @@ const handleRefreshToken = asyncHandler(async (req, res) => {
   const refreshToken = cookies.refreshToken;
   const foundUser = await User.findOne({ refreshToken });
   if (!foundUser) {
-    throw new ApiError(403, 'Refresh token no concuerda');
+    throw new ApiError(401, 'Refresh token no concuerda');
   }
   try {
     const { _id } = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_KEY);

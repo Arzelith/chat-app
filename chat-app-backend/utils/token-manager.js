@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const ApiError = require('../errors/api-error');
 
 const generateAccessToken = async (user) => {
   try {
