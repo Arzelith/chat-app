@@ -107,6 +107,7 @@ const userSlice = createSlice({
   reducers: {
     setAccessToken: (state, action) => {
       state.accessToken = action.payload;
+      localStorage.setItem('MERN_CHAT_APP_ACC', action.payload)
     },
   },
   extraReducers: (builder) => {
