@@ -5,7 +5,7 @@ const EmojiPickerContainerToMemo = ({ setEmoji }) => {
     <EmojiPicker
       width={'100%'}
       height={'100%'}
-      emojiStyle='native'
+      emojiStyle='google'
       lazyLoadEmojis={false}
       emojiVersion={'3.0'}
       searchPlaceHolder='Buscar...'

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { ChatBox, EmojiPickerContainer } from './';
 import { Box, TextField, Button, styled, Paper } from '@mui/material';
-import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
+import { Emoji } from 'emoji-picker-react';
 
 const SquareButton = styled(Button)(() => ({
   maxWidth: '40px',
@@ -56,6 +56,7 @@ const ActiveChat = ({ user, chatMessages, sendNewMessage, currentChat }) => {
     messageRef.selectionEnd = start.length + emoji.length;
     setCursorPosition(start.length + emoji.length);
     setEmoji('');
+    formRef.current.message.focus();
   };
 
   useEffect(() => {
@@ -113,9 +114,10 @@ const ActiveChat = ({ user, chatMessages, sendNewMessage, currentChat }) => {
             sx={{ mr: 1 }}
             onClick={() => {
               setShowEmojiList(!showEmojiList);
+              formRef.current.message.focus();
             }}
           >
-            <EmojiEmotionsIcon fontSize='medium' sx={{ color: '#fff' }} />
+            <Emoji unified='1f642' emojiStyle='google' size={'25'} />
           </SquareButton>
           <MessageInput
             variant='standard'
