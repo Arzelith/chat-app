@@ -121,6 +121,7 @@ const ModalForm = ({ setOpenFormModal, openFormModal, socket, chatList }) => {
                   autoComplete='off'
                   margin='normal'
                   disabled={isSubmitting}
+                  type={input.type? input.type: 'text'}
                 />
               ))}
 
