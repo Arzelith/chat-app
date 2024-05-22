@@ -14,7 +14,7 @@ const login = asyncHandler(async (req, res) => {
   }
   const isPasswordCorrect = await user.comparePassword(password);
   if (!isPasswordCorrect) {
-    throw new ApiError(401, 'El password ingresado es incorrecto');
+    throw new ApiError(401, 'Contraseña incorrecta');
   }
   const accessToken = await generateAccessToken(user);
   const refreshToken = await generateRefreshToken(user, res);

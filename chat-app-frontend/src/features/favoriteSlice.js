@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, current } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import handleServerError from '../utils/serverErrorHandler';
 
 export const getAllFavorites = createAsyncThunk(
@@ -47,9 +47,8 @@ const favoriteSlice = createSlice({
   initialState,
   reducers: {
     filterFavorites: (state, action) => {
-      const filtered = state.favoriteList.filter(
-        (item) =>
-          item.displayName.toLowerCase().includes(action.payload)
+      const filtered = state.favoriteList.filter((item) =>
+        item.displayName.toLowerCase().includes(action.payload)
       );
       state.filteredFavoriteList = [...filtered];
     },

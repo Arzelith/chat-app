@@ -1,4 +1,4 @@
-import { Modal, Paper, Typography, Button } from '@mui/material';
+import { Modal, Paper, Typography, Button, Box } from '@mui/material';
 
 const style = {
   position: 'absolute',
@@ -11,19 +11,36 @@ const style = {
   p: 2,
   maxWidth: 480,
   width: '90%',
-  outline:'none'
+  outline: 'none',
 };
 
-const ActionModal = ({ open, children, variant, onClick, title, acceptBtnText }) => {
+const ActionModal = ({
+  open,
+  children,
+  variant,
+  onClick,
+  title,
+  acceptBtnText,
+  body,
+}) => {
   return (
-    <Modal
-      open={open}
-      
-    >
+    <Modal open={open}>
       <Paper sx={style} variant='outlined' className='modal'>
         <Typography variant='h4' fontWeight={'bold'} color={'primary'} mb={1} mt={1}>
           {title}
         </Typography>
+        {body && (
+          <Box sx={{marginTop:1.5, marginBottom:1.5}}>
+            <Typography
+              variant='p'
+              fontWeight={''}
+              color={'primary'}
+              
+            >
+              {body}
+            </Typography>
+          </Box>
+        )}
         {(variant === 'success' || variant === 'sessionOver') && (
           <Button
             size='md'

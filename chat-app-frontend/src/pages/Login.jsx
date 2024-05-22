@@ -13,7 +13,7 @@ import {
 } from '../components';
 import { Formik, Form } from 'formik';
 import { loginValidation, registerValidation } from '../validations/loginPageValidations';
-import { Typography, Button } from '@mui/material';
+import { Typography } from '@mui/material';
 import Lottie from 'lottie-react';
 import logo from '../assets/animations/logoA.json';
 
@@ -44,14 +44,14 @@ const Login = () => {
     },
     {
       name: 'password',
-      label: 'Password',
+      label: 'Contraseña',
       type: 'password',
       autoComplete: isRegistered ? 'current-password' : 'off',
       show: isRegistered,
     },
     {
       name: 'confirmPassword',
-      label: 'Confirmar password',
+      label: 'Confirmar contraseña',
       type: 'password',
       autoComplete: 'off',
       show: !isRegistered,
@@ -63,6 +63,7 @@ const Login = () => {
       <ActionModal
         variant={'success'}
         open={open}
+        body={'Inicie sesión con su nuevo nombre de usuario y contraseña'}
         title={'Registro exitoso'}
         acceptBtnText={'Aceptar'}
         onClick={() => {

@@ -124,10 +124,10 @@ const updatePassword = asyncHandler(async (req, res) => {
 //HELPERS
 const checkPass = (password, confirmPassword) => {
   if (password.length < 6 || password.length > 20) {
-    throw new ApiError(400, 'El password debe tener entre 6 y 20 caracteres');
+    throw new ApiError(400, 'La contraseña debe tener entre 6 y 20 caracteres');
   }
   if (password !== confirmPassword) {
-    throw new ApiError(400, 'Los passwords no concuerdan');
+    throw new ApiError(400, 'Las contraseñas no concuerdan');
   }
 };
 

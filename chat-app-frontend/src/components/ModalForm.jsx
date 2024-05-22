@@ -13,10 +13,10 @@ import { Box } from '@mui/material';
 
 const inputs = [
   { name: 'email', label: 'Email', formType: 'email' },
-  { name: 'password', label: 'Password', type: 'password', formType: 'password' },
+  { name: 'password', label: 'Contraseña', type: 'password', formType: 'password' },
   {
     name: 'confirmPassword',
-    label: 'Confirmar password',
+    label: 'Confirmar contraseña',
     type: 'password',
     formType: 'password',
   },
