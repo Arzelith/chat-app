@@ -32,7 +32,7 @@ const login = asyncHandler(async (req, res) => {
           ? `http://localhost:3000`
           : process.env.ORIGIN;
       const url = `${baseUrl}/account/${user._id}/verify/${emailVerificationToken.token}`;
-      await sendEmail(user.email, 'Verifica tu cuenta Mern chat', url, user.displayName);
+      await sendEmail(user.email, 'Verifica tu cuenta', url, user.displayName);
     }
     throw new ApiError(
       403,

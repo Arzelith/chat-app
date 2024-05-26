@@ -12,7 +12,7 @@ const sendMail = async (to, subject, url, userName) => {
   });
 
   const mailOptions = {
-    from: process.env.MAILER_USER,
+    from: `"Mern chat app" <${process.env.MAILER_USER}>`,
     to,
     subject,
     html: `<p>Saludos ${userName}</p>

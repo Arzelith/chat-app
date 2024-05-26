@@ -33,7 +33,7 @@ const registerUser = asyncHandler(async (req, res) => {
   const baseUrl =
     process.env.NODE_ENV !== 'production' ? `http://localhost:3000` : process.env.ORIGIN;
   const url = `${baseUrl}/account/${createdUser._id}/verify/${emailVerificationToken.token}`;
-  await sendEmail(createdUser.email, 'Verifica tu cuenta Mern chat', url, createdUser.displayName);
+  await sendEmail(createdUser.email, 'Verifica tu cuenta', url, createdUser.displayName);
 
   res.status(201).json({
     user: {
