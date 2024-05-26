@@ -1,5 +1,5 @@
 import { createTheme, responsiveFontSizes } from '@mui/material/styles';
-import img from './assets/images/bg.jpg';
+import img from './assets/images/bg1.jpg';
 const theme = createTheme({
   palette: {
     mode: 'light',
