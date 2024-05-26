@@ -26,6 +26,7 @@ const initialState = {
 
 const Login = () => {
   const [isRegistered, setIsRegistered] = useState(true);
+  const [message, setMessage] = useState('');
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
 
@@ -63,12 +64,13 @@ const Login = () => {
       <ActionModal
         variant={'success'}
         open={open}
-        body={'Inicie sesión con su nuevo nombre de usuario y contraseña'}
+        body={message}
         title={'Registro exitoso'}
         acceptBtnText={'Aceptar'}
         onClick={() => {
           setOpen(false);
           setIsRegistered(true);
+          setMessage('');
         }}
       />
       <Formik
@@ -77,7 +79,8 @@ const Login = () => {
         onSubmit={async (values, actions) => {
           try {
             if (!isRegistered) {
-              await axiosPublic.post('/users', values);
+              const response = await axiosPublic.post('/users', values);
+              setMessage(response.data.message);
               setOpen(true);
             } else {
               await dispatch(authUser(values)).unwrap();

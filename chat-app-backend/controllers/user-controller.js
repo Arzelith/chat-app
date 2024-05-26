@@ -1,4 +1,7 @@
 const User = require('../models/user-model');
+const Token = require('../models/token-model');
+const sendEmail = require('../utils/email-handler');
+const crypto = require('crypto');
 const { asyncHandler } = require('../utils/async-handler');
 const { upload } = require('../utils/upload-handler');
 const ApiError = require('../errors/api-error');
@@ -23,13 +26,45 @@ const registerUser = asyncHandler(async (req, res) => {
     password,
   });
 
+  const emailVerificationToken = await Token.create({
+    userId: createdUser._id,
+    token: crypto.randomBytes(32).toString('hex'),
+  });
+  const baseUrl =
+    process.env.NODE_ENV !== 'production' ? `http://localhost:3000` : process.env.ORIGIN;
+  const url = `${baseUrl}/account/${createdUser._id}/verify/${emailVerificationToken.token}`;
+  await sendEmail(createdUser.email, 'Verifica tu cuenta Mern chat', url, createdUser.displayName);
+
   res.status(201).json({
     user: {
       displayName: createdUser.displayName,
       email: createdUser.email,
       avatar: createdUser.avatar,
     },
+    message: `Un correo electrónico ha sido enviado a ${createdUser.email}, por favor verifique su cuenta`,
   });
+});
+
+const verifyUser = asyncHandler(async (req, res) => {
+  const { userId, token } = req.params;
+  if (!userId || !token) {
+    throw new ApiError(400, 'Este vínculo no es válido');
+  }
+  const user = await User.findOne({ _id: userId });
+  if (!user) {
+    throw new ApiError(400, 'Este vínculo no es válido');
+  }
+  const verificationToken = await Token.findOne({
+    userId: userId,
+    token: token,
+  });
+  if (!verificationToken) {
+    throw new ApiError(400, 'Este vínculo no es válido');
+  }
+  user.verified = true;
+  const updatedUser = await user.save();
+  await verificationToken.deleteOne({ _id: verificationToken._id });
+  res.status(200).json(updatedUser);
 });
 
 const findUser = asyncHandler(async (req, res) => {
@@ -145,4 +180,5 @@ module.exports = {
   updateProfileAvatar,
   findUser,
   updateUserStatus,
+  verifyUser,
 };

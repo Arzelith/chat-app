@@ -30,12 +30,11 @@ const ActionModal = ({
           {title}
         </Typography>
         {body && (
-          <Box sx={{marginTop:1.5, marginBottom:1.5}}>
+          <Box sx={{marginTop:1, marginBottom:1}}>
             <Typography
               variant='p'
               fontWeight={''}
               color={'primary'}
-              
             >
               {body}
             </Typography>
