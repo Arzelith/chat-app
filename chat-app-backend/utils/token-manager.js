@@ -20,7 +20,8 @@ const generateRefreshToken = async (user, res) => {
     const refreshToken = jwt.sign({ _id: user._id }, process.env.REFRESH_TOKEN_KEY, {
       expiresIn: process.env.REFRESH_TOKEN_EXP,
     });
-    const expireDate = new Date(Number(new Date()) + 2 * 24 * 60 * 60 * 1000);
+    const rt = jwt.decode(refreshToken);
+    const expireDate = new Date(Date.now() + (rt.exp - rt.iat) * 1000);
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
