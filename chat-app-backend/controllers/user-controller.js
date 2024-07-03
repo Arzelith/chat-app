@@ -16,7 +16,7 @@ const registerUser = asyncHandler(async (req, res) => {
     'Ya existe un usuario registrado con este email'
   );
   await checkUnique(
-    { displayName: { $regex: displayName, $options: 'i' } },
+    { displayName: { $regex: new RegExp('^' + displayName.toLowerCase(), 'i') } },
     'Este nombre de usuario ya se encuentra en uso'
   );
   checkPass(password, confirmPassword);
