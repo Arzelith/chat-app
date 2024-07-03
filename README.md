@@ -13,8 +13,8 @@ Aplicación de mensajería instantánea.
 4. Instalar dependecias para chat-app-backend y chat-app-frontend: npm install
 
 5. En la raiz de chat-app-frontend crear archivo .env y crea las siguientas variables de entorno:
-   VITE_BASE_URL = http://localhost:5000/chat-app-api/v1
-   VITE_SOCKET_URL = http://localhost:5000
+   - VITE_BASE_URL = http://localhost:5000/chat-app-api/v1
+   - VITE_SOCKET_URL = http://localhost:5000
 
 6. En la raiz de chat-app-back-backend crear archivo .env y crea las siguientes variables:
 
