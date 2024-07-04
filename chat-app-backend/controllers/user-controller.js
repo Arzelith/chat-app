@@ -79,6 +79,7 @@ const findUser = asyncHandler(async (req, res) => {
         displayName: { $regex: search, $options: 'i' },
       },
       { _id: { $ne: req.user._id } },
+      { verified: true },
     ],
   });
 
